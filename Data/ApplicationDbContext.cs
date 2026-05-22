@@ -24,6 +24,34 @@ namespace SmartMeal.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Dish>()
+                .Property(d => d.Calories)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Dish>()
+                .Property(d => d.Proteins)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Dish>()
+                .Property(d => d.Fats)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Dish>()
+                .Property(d => d.Carbs)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<UserProfile>()
+                .Property(u => u.Weight)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<UserProfile>()
+                .Property(u => u.Height)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<UserProfile>()
+                .Property(u => u.DailyCalories)
+                .HasPrecision(10, 2);
+
             modelBuilder.Entity<DishAllergen>()
                 .HasKey(da => new { da.DishId, da.AllergenId });
 
