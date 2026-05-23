@@ -263,6 +263,41 @@ namespace SmartMeal.Data
                     CreatedByUserProfileId = null
                 }
             );
+
+            modelBuilder.Entity<DishDietType>().HasData(
+                new DishDietType { DishId = 1, DietTypeId = 5 },
+                new DishDietType { DishId = 1, DietTypeId = 7 },
+                new DishDietType { DishId = 2, DietTypeId = 1 },
+                new DishDietType { DishId = 2, DietTypeId = 7 },
+                new DishDietType { DishId = 3, DietTypeId = 1 },
+                new DishDietType { DishId = 3, DietTypeId = 5 },
+                new DishDietType { DishId = 3, DietTypeId = 7 },
+                new DishDietType { DishId = 4, DietTypeId = 1 },
+                new DishDietType { DishId = 4, DietTypeId = 7 },
+                new DishDietType { DishId = 5, DietTypeId = 1 },
+                new DishDietType { DishId = 5, DietTypeId = 6 },
+                new DishDietType { DishId = 5, DietTypeId = 7 },
+                new DishDietType { DishId = 6, DietTypeId = 3 },
+                new DishDietType { DishId = 6, DietTypeId = 5 },
+                new DishDietType { DishId = 6, DietTypeId = 7 },
+                new DishDietType { DishId = 7, DietTypeId = 5 },
+                new DishDietType { DishId = 7, DietTypeId = 7 },
+                new DishDietType { DishId = 8, DietTypeId = 1 },
+                new DishDietType { DishId = 8, DietTypeId = 7 }
+            );
+
+            modelBuilder.Entity<DishAllergen>().HasData(
+                new DishAllergen { DishId = 1, AllergenId = 1 },
+                new DishAllergen { DishId = 1, AllergenId = 4 },
+                new DishAllergen { DishId = 2, AllergenId = 1 },
+                new DishAllergen { DishId = 2, AllergenId = 5 },
+                new DishAllergen { DishId = 2, AllergenId = 4 },
+                new DishAllergen { DishId = 5, AllergenId = 6 },
+                new DishAllergen { DishId = 5, AllergenId = 3 },
+                new DishAllergen { DishId = 7, AllergenId = 1 },
+                new DishAllergen { DishId = 8, AllergenId = 4 },
+                new DishAllergen { DishId = 8, AllergenId = 1 }
+            );
         }
     }
 }
