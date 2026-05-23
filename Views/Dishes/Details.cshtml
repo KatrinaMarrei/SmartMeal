@@ -1,0 +1,70 @@
+@model DishDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.IsFound ? Model.Name : "Блюдо не найдено";
+}
+
+@if (!Model.IsFound)
+{
+    <h1 class="mb-3">Блюдо не найдено</h1>
+    <p class="alert alert-warning">Запрошенное блюдо отсутствует в каталоге.</p>
+    <a asp-controller="Dishes" asp-action="Index" class="btn btn-primary">Вернуться в каталог</a>
+}
+else
+{
+    <div class="mb-4">
+        <h1>@Model.Name</h1>
+        <p class="lead">@Model.Description</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <h2 class="h4">Состав</h2>
+            <p>@Model.IngredientsList</p>
+
+            <h2 class="h4 mt-4">Основная информация</h2>
+            <dl class="row">
+                <dt class="col-sm-5">Категория</dt>
+                <dd class="col-sm-7">@Model.CategoryName</dd>
+
+                <dt class="col-sm-5">Основной ингредиент</dt>
+                <dd class="col-sm-7">@(Model.MainIngredient ?? "Не указан")</dd>
+
+                <dt class="col-sm-5">Время приготовления</dt>
+                <dd class="col-sm-7">@Model.CookingTime мин.</dd>
+
+                <dt class="col-sm-5">Подходит детям</dt>
+                <dd class="col-sm-7">@(Model.IsForChildren ? "Да" : "Нет")</dd>
+
+                <dt class="col-sm-5">Пользовательский рецепт</dt>
+                <dd class="col-sm-7">@(Model.IsCustom ? "Да" : "Нет")</dd>
+            </dl>
+        </div>
+
+        <div class="col-lg-5">
+            <h2 class="h4">Пищевая ценность</h2>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">Калории</th>
+                        <td>@Model.Calories ккал</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Белки</th>
+                        <td>@Model.Proteins г</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Жиры</th>
+                        <td>@Model.Fats г</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Углеводы</th>
+                        <td>@Model.Carbs г</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary mt-4">Вернуться в каталог</a>
+}

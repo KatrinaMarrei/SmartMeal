@@ -1,0 +1,103 @@
+@model DishCatalogViewModel
+
+@{
+    ViewData["Title"] = "Каталог блюд";
+}
+
+<h1 class="mb-4">Каталог блюд</h1>
+
+<form asp-controller="Dishes" asp-action="Index" method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="categoryId" class="form-label">Категория</label>
+        <select id="categoryId" name="categoryId" class="form-select">
+            <option value="">Все категории</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">
+                    @category.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="mainIngredient" class="form-label">Основной ингредиент</label>
+        <select id="mainIngredient" name="mainIngredient" class="form-select">
+            <option value="">Любой ингредиент</option>
+            @foreach (var ingredient in Model.MainIngredients)
+            {
+                <option value="@ingredient" selected="@(Model.MainIngredient == ingredient)">
+                    @ingredient
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="maxCookingTime" class="form-label">Время до, мин.</label>
+        <input id="maxCookingTime" name="maxCookingTime" type="number" min="1" class="form-control" value="@Model.MaxCookingTime" />
+    </div>
+
+    <div class="col-md-3">
+        <label for="isForChildren" class="form-label">Для детей</label>
+        <select id="isForChildren" name="isForChildren" class="form-select">
+            <option value="">Любой вариант</option>
+            <option value="true" selected="@(Model.IsForChildren == true)">Да</option>
+            <option value="false" selected="@(Model.IsForChildren == false)">Нет</option>
+        </select>
+    </div>
+
+    <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Показать</button>
+        <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary">Сбросить</a>
+    </div>
+</form>
+
+@if (!Model.Dishes.Any())
+{
+    <div class="alert alert-info">
+        По выбранным фильтрам блюда не найдены.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Ккал</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                    <th>Время</th>
+                    <th>Ингредиент</th>
+                    <th>Для детей</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dish in Model.Dishes)
+                {
+                    <tr>
+                        <td>@dish.Name</td>
+                        <td>@dish.CategoryName</td>
+                        <td>@dish.Calories</td>
+                        <td>@dish.Proteins</td>
+                        <td>@dish.Fats</td>
+                        <td>@dish.Carbs</td>
+                        <td>@dish.CookingTime мин.</td>
+                        <td>@(dish.MainIngredient ?? "Не указан")</td>
+                        <td>@(dish.IsForChildren ? "Да" : "Нет")</td>
+                        <td>
+                            <a asp-controller="Dishes" asp-action="Details" asp-route-id="@dish.Id" class="btn btn-sm btn-outline-primary">
+                                Подробнее
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
