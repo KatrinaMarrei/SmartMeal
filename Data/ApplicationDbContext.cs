@@ -98,10 +98,10 @@ namespace SmartMeal.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Category>().HasData(
-    new Category { Id = 1, Name = "Завтрак", SortOrder = 1 },
-    new Category { Id = 2, Name = "Обед", SortOrder = 2 },
-    new Category { Id = 3, Name = "Ужин", SortOrder = 3 },
-    new Category { Id = 4, Name = "Перекус", SortOrder = 4 }
+                new Category { Id = 1, Name = "Завтрак", SortOrder = 1 },
+                new Category { Id = 2, Name = "Обед", SortOrder = 2 },
+                new Category { Id = 3, Name = "Ужин", SortOrder = 3 },
+                new Category { Id = 4, Name = "Перекус", SortOrder = 4 }
 );
 
             modelBuilder.Entity<DietType>().HasData(
@@ -123,6 +123,145 @@ namespace SmartMeal.Data
                 new Allergen { Id = 6, Name = "Рыба", Description = "Рыба и рыбные продукты." },
                 new Allergen { Id = 7, Name = "Морепродукты", Description = "Креветки, мидии, кальмары и другие морепродукты." },
                 new Allergen { Id = 8, Name = "Соя", Description = "Соя и соевые продукты." }
+            );
+
+            modelBuilder.Entity<Dish>().HasData(
+                new Dish
+                {
+                    Id = 1,
+                    Name = "Овсяная каша с яблоком",
+                    Description = "Теплая овсяная каша на завтрак с кусочками яблока и корицей.",
+                    CategoryId = 1,
+                    Calories = 310m,
+                    Proteins = 9m,
+                    Fats = 7m,
+                    Carbs = 54m,
+                    CookingTime = 15,
+                    IngredientsList = "Овсяные хлопья, молоко, яблоко, корица, мед",
+                    MainIngredient = "Овсяные хлопья",
+                    IsForChildren = true,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 2,
+                    Name = "Творожная запеканка",
+                    Description = "Нежная запеканка из творога с легкой сладостью и мягкой текстурой.",
+                    CategoryId = 1,
+                    Calories = 360m,
+                    Proteins = 24m,
+                    Fats = 14m,
+                    Carbs = 34m,
+                    CookingTime = 45,
+                    IngredientsList = "Творог, яйцо, манная крупа, сметана, сахар",
+                    MainIngredient = "Творог",
+                    IsForChildren = true,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 3,
+                    Name = "Куриный суп с овощами",
+                    Description = "Легкий обеденный суп с курицей, картофелем, морковью и зеленью.",
+                    CategoryId = 2,
+                    Calories = 280m,
+                    Proteins = 22m,
+                    Fats = 8m,
+                    Carbs = 30m,
+                    CookingTime = 50,
+                    IngredientsList = "Куриное филе, картофель, морковь, лук, зелень",
+                    MainIngredient = "Курица",
+                    IsForChildren = true,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 4,
+                    Name = "Гречка с индейкой",
+                    Description = "Сытное блюдо для обеда из рассыпчатой гречки и тушеной индейки.",
+                    CategoryId = 2,
+                    Calories = 470m,
+                    Proteins = 35m,
+                    Fats = 12m,
+                    Carbs = 55m,
+                    CookingTime = 40,
+                    IngredientsList = "Гречневая крупа, филе индейки, морковь, лук, растительное масло",
+                    MainIngredient = "Индейка",
+                    IsForChildren = true,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 5,
+                    Name = "Запеченная рыба с овощами",
+                    Description = "Ужин из белой рыбы, запеченной с кабачком, перцем и томатами.",
+                    CategoryId = 3,
+                    Calories = 390m,
+                    Proteins = 32m,
+                    Fats = 16m,
+                    Carbs = 25m,
+                    CookingTime = 35,
+                    IngredientsList = "Белая рыба, кабачок, болгарский перец, томаты, лимонный сок",
+                    MainIngredient = "Рыба",
+                    IsForChildren = false,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 6,
+                    Name = "Овощное рагу с фасолью",
+                    Description = "Питательное овощное рагу с фасолью, томатами и ароматными специями.",
+                    CategoryId = 3,
+                    Calories = 340m,
+                    Proteins = 15m,
+                    Fats = 9m,
+                    Carbs = 48m,
+                    CookingTime = 45,
+                    IngredientsList = "Фасоль, картофель, морковь, томаты, лук, специи",
+                    MainIngredient = "Фасоль",
+                    IsForChildren = false,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 7,
+                    Name = "Йогурт с ягодами",
+                    Description = "Быстрый перекус из натурального йогурта со свежими ягодами.",
+                    CategoryId = 4,
+                    Calories = 190m,
+                    Proteins = 10m,
+                    Fats = 5m,
+                    Carbs = 26m,
+                    CookingTime = 5,
+                    IngredientsList = "Натуральный йогурт, ягоды, овсяные хлопья",
+                    MainIngredient = "Йогурт",
+                    IsForChildren = true,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                },
+                new Dish
+                {
+                    Id = 8,
+                    Name = "Сэндвич с курицей",
+                    Description = "Простой перекус с куриным филе, овощами и цельнозерновым хлебом.",
+                    CategoryId = 4,
+                    Calories = 330m,
+                    Proteins = 24m,
+                    Fats = 10m,
+                    Carbs = 35m,
+                    CookingTime = 10,
+                    IngredientsList = "Цельнозерновой хлеб, куриное филе, огурец, лист салата, йогуртовый соус",
+                    MainIngredient = "Курица",
+                    IsForChildren = true,
+                    IsCustom = false,
+                    CreatedByUserProfileId = null
+                }
             );
         }
     }
