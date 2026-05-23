@@ -29,5 +29,9 @@ namespace SmartMeal.Models.ViewModels
         public bool IsForChildren { get; set; }
 
         public bool IsCustom { get; set; }
+
+        public List<string> DietTypeNames { get; set; } = new();
+
+        public List<string> AllergenNames { get; set; } = new();
     }
 }

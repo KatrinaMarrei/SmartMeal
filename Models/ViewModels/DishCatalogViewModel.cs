@@ -10,9 +10,17 @@ namespace SmartMeal.Models.ViewModels
 
         public bool? IsForChildren { get; set; }
 
+        public int? DietTypeId { get; set; }
+
+        public int? AllergenId { get; set; }
+
         public List<DishCatalogItemViewModel> Dishes { get; set; } = new();
 
         public List<FilterOptionViewModel> Categories { get; set; } = new();
+
+        public List<FilterOptionViewModel> DietTypes { get; set; } = new();
+
+        public List<FilterOptionViewModel> Allergens { get; set; } = new();
 
         public List<string> MainIngredients { get; set; } = new();
     }

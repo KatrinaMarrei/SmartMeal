@@ -38,6 +38,12 @@ else
 
                 <dt class="col-sm-5">Пользовательский рецепт</dt>
                 <dd class="col-sm-7">@(Model.IsCustom ? "Да" : "Нет")</dd>
+
+                <dt class="col-sm-5">Типы питания</dt>
+                <dd class="col-sm-7">@(Model.DietTypeNames.Any() ? string.Join(", ", Model.DietTypeNames) : "Не указано")</dd>
+
+                <dt class="col-sm-5">Аллергены</dt>
+                <dd class="col-sm-7">@(Model.AllergenNames.Any() ? string.Join(", ", Model.AllergenNames) : "Не указано")</dd>
             </dl>
         </div>
 

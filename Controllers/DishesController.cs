@@ -18,11 +18,17 @@ namespace SmartMeal.Controllers
             int? categoryId,
             string? mainIngredient,
             int? maxCookingTime,
-            bool? isForChildren)
+            bool? isForChildren,
+            int? dietTypeId,
+            int? allergenId)
         {
             IQueryable<Models.Dish> query = _context.Dishes
                 .AsNoTracking()
-                .Include(d => d.Category);
+                .Include(d => d.Category)
+                .Include(d => d.DishDietTypes)
+                    .ThenInclude(dd => dd.DietType)
+                .Include(d => d.DishAllergens)
+                    .ThenInclude(da => da.Allergen);
 
             if (categoryId.HasValue)
             {
@@ -44,9 +50,22 @@ namespace SmartMeal.Controllers
                 query = query.Where(d => d.IsForChildren == isForChildren.Value);
             }
 
-            var dishes = await query
+            if (dietTypeId.HasValue)
+            {
+                query = query.Where(d => d.DishDietTypes.Any(dd => dd.DietTypeId == dietTypeId.Value));
+            }
+
+            if (allergenId.HasValue)
+            {
+                query = query.Where(d => d.DishAllergens.Any(da => da.AllergenId == allergenId.Value));
+            }
+
+            var dishEntities = await query
                 .OrderBy(d => d.Category!.SortOrder)
                 .ThenBy(d => d.Name)
+                .ToListAsync();
+
+            var dishes = dishEntities
                 .Select(d => new DishCatalogItemViewModel
                 {
                     Id = d.Id,
@@ -58,9 +77,19 @@ namespace SmartMeal.Controllers
                     Carbs = d.Carbs,
                     CookingTime = d.CookingTime,
                     MainIngredient = d.MainIngredient,
-                    IsForChildren = d.IsForChildren
+                    IsForChildren = d.IsForChildren,
+                    DietTypeNames = d.DishDietTypes
+                        .Where(dd => dd.DietType != null)
+                        .Select(dd => dd.DietType!.Name)
+                        .OrderBy(name => name)
+                        .ToList(),
+                    AllergenNames = d.DishAllergens
+                        .Where(da => da.Allergen != null)
+                        .Select(da => da.Allergen!.Name)
+                        .OrderBy(name => name)
+                        .ToList()
                 })
-                .ToListAsync();
+                .ToList();
 
             var model = new DishCatalogViewModel
             {
@@ -68,6 +97,8 @@ namespace SmartMeal.Controllers
                 MainIngredient = mainIngredient,
                 MaxCookingTime = maxCookingTime,
                 IsForChildren = isForChildren,
+                DietTypeId = dietTypeId,
+                AllergenId = allergenId,
                 Dishes = dishes,
                 Categories = await _context.Categories
                     .AsNoTracking()
@@ -76,6 +107,24 @@ namespace SmartMeal.Controllers
                     {
                         Id = c.Id,
                         Name = c.Name
+                    })
+                    .ToListAsync(),
+                DietTypes = await _context.DietTypes
+                    .AsNoTracking()
+                    .OrderBy(dt => dt.Name)
+                    .Select(dt => new FilterOptionViewModel
+                    {
+                        Id = dt.Id,
+                        Name = dt.Name
+                    })
+                    .ToListAsync(),
+                Allergens = await _context.Allergens
+                    .AsNoTracking()
+                    .OrderBy(a => a.Name)
+                    .Select(a => new FilterOptionViewModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name
                     })
                     .ToListAsync(),
                 MainIngredients = await _context.Dishes
@@ -95,32 +144,46 @@ namespace SmartMeal.Controllers
             var dish = await _context.Dishes
                 .AsNoTracking()
                 .Include(d => d.Category)
-                .Where(d => d.Id == id)
-                .Select(d => new DishDetailsViewModel
-                {
-                    IsFound = true,
-                    Id = d.Id,
-                    Name = d.Name,
-                    Description = d.Description,
-                    CategoryName = d.Category != null ? d.Category.Name : "Без категории",
-                    Calories = d.Calories,
-                    Proteins = d.Proteins,
-                    Fats = d.Fats,
-                    Carbs = d.Carbs,
-                    CookingTime = d.CookingTime,
-                    IngredientsList = d.IngredientsList,
-                    MainIngredient = d.MainIngredient,
-                    IsForChildren = d.IsForChildren,
-                    IsCustom = d.IsCustom
-                })
-                .FirstOrDefaultAsync();
+                .Include(d => d.DishDietTypes)
+                    .ThenInclude(dd => dd.DietType)
+                .Include(d => d.DishAllergens)
+                    .ThenInclude(da => da.Allergen)
+                .FirstOrDefaultAsync(d => d.Id == id);
 
             if (dish == null)
             {
                 return View(new DishDetailsViewModel { IsFound = false });
             }
 
-            return View(dish);
+            var model = new DishDetailsViewModel
+            {
+                IsFound = true,
+                Id = dish.Id,
+                Name = dish.Name,
+                Description = dish.Description,
+                CategoryName = dish.Category != null ? dish.Category.Name : "Без категории",
+                Calories = dish.Calories,
+                Proteins = dish.Proteins,
+                Fats = dish.Fats,
+                Carbs = dish.Carbs,
+                CookingTime = dish.CookingTime,
+                IngredientsList = dish.IngredientsList,
+                MainIngredient = dish.MainIngredient,
+                IsForChildren = dish.IsForChildren,
+                IsCustom = dish.IsCustom,
+                DietTypeNames = dish.DishDietTypes
+                    .Where(dd => dd.DietType != null)
+                    .Select(dd => dd.DietType!.Name)
+                    .OrderBy(name => name)
+                    .ToList(),
+                AllergenNames = dish.DishAllergens
+                    .Where(da => da.Allergen != null)
+                    .Select(da => da.Allergen!.Name)
+                    .OrderBy(name => name)
+                    .ToList()
+            };
+
+            return View(model);
         }
     }
 }

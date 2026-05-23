@@ -7,7 +7,7 @@
 <h1 class="mb-4">Каталог блюд</h1>
 
 <form asp-controller="Dishes" asp-action="Index" method="get" class="row g-3 mb-4">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label for="categoryId" class="form-label">Категория</label>
         <select id="categoryId" name="categoryId" class="form-select">
             <option value="">Все категории</option>
@@ -20,7 +20,7 @@
         </select>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label for="mainIngredient" class="form-label">Основной ингредиент</label>
         <select id="mainIngredient" name="mainIngredient" class="form-select">
             <option value="">Любой ингредиент</option>
@@ -33,12 +33,12 @@
         </select>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label for="maxCookingTime" class="form-label">Время до, мин.</label>
         <input id="maxCookingTime" name="maxCookingTime" type="number" min="1" class="form-control" value="@Model.MaxCookingTime" />
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label for="isForChildren" class="form-label">Для детей</label>
         <select id="isForChildren" name="isForChildren" class="form-select">
             <option value="">Любой вариант</option>
@@ -47,9 +47,35 @@
         </select>
     </div>
 
+    <div class="col-md-4">
+        <label for="dietTypeId" class="form-label">Тип питания</label>
+        <select id="dietTypeId" name="dietTypeId" class="form-select">
+            <option value="">Любой тип питания</option>
+            @foreach (var dietType in Model.DietTypes)
+            {
+                <option value="@dietType.Id" selected="@(Model.DietTypeId == dietType.Id)">
+                    @dietType.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="allergenId" class="form-label">Аллерген</label>
+        <select id="allergenId" name="allergenId" class="form-select">
+            <option value="">Любой аллерген</option>
+            @foreach (var allergen in Model.Allergens)
+            {
+                <option value="@allergen.Id" selected="@(Model.AllergenId == allergen.Id)">
+                    @allergen.Name
+                </option>
+            }
+        </select>
+    </div>
+
     <div class="col-12 d-flex gap-2">
         <button type="submit" class="btn btn-primary">Показать</button>
-        <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary">Сбросить</a>
+        <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary">Сбросить фильтры</a>
     </div>
 </form>
 
@@ -74,6 +100,8 @@ else
                     <th>Время</th>
                     <th>Ингредиент</th>
                     <th>Для детей</th>
+                    <th>Типы питания</th>
+                    <th>Аллергены</th>
                     <th></th>
                 </tr>
             </thead>
@@ -90,6 +118,8 @@ else
                         <td>@dish.CookingTime мин.</td>
                         <td>@(dish.MainIngredient ?? "Не указан")</td>
                         <td>@(dish.IsForChildren ? "Да" : "Нет")</td>
+                        <td>@(dish.DietTypeNames.Any() ? string.Join(", ", dish.DietTypeNames) : "Не указано")</td>
+                        <td>@(dish.AllergenNames.Any() ? string.Join(", ", dish.AllergenNames) : "Не указано")</td>
                         <td>
                             <a asp-controller="Dishes" asp-action="Details" asp-route-id="@dish.Id" class="btn btn-sm btn-outline-primary">
                                 Подробнее
