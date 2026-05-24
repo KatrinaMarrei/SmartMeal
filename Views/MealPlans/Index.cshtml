@@ -7,7 +7,7 @@
 <div class="mb-4">
     <h1>План питания</h1>
     <p class="text-muted mb-1">Демо-пользователь: @Model.UserFullName</p>
-    <p class="text-muted mb-0">Неделя: @Model.WeekNumber. Цель на день: @Model.DailyCaloriesTarget ккал.</p>
+    <p class="text-muted mb-0">Неделя: @Model.WeekNumber. Цель на день: @Model.DailyCaloriesTarget.ToString("0") ккал.</p>
 </div>
 
 <form asp-controller="MealPlans" asp-action="Save" method="post">
@@ -54,19 +54,19 @@
                                     <option value="">Не выбрано</option>
                                     @foreach (var dish in cell.DishOptions)
                                     {
-                                        <option value="@dish.Id">@dish.Name (@dish.Calories ккал)</option>
+                                        <option value="@dish.Id">@dish.Name (@dish.Calories.ToString("0") ккал)</option>
                                     }
                                 </select>
 
                                 @if (cell.SelectedDishId.HasValue)
                                 {
-                                    <div class="small text-muted mt-2">@cell.SelectedCalories ккал</div>
+                                    <div class="small text-muted mt-2">@cell.SelectedCalories.ToString("0") ккал</div>
                                 }
                             </td>
                         }
 
                         <td>
-                            <strong>@day.TotalCalories ккал</strong>
+                            <strong>@day.TotalCalories.ToString("0") ккал</strong>
                         </td>
                         <td>
                             <span class="@GetStatusClass(day.Status)">@day.Status</span>

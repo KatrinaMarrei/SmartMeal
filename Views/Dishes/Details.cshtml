@@ -53,19 +53,19 @@ else
                 <tbody>
                     <tr>
                         <th scope="row">Калории</th>
-                        <td>@Model.Calories ккал</td>
+                        <td>@Model.Calories.ToString("0") ккал</td>
                     </tr>
                     <tr>
                         <th scope="row">Белки</th>
-                        <td>@Model.Proteins г</td>
+                        <td>@Model.Proteins.ToString("0") г</td>
                     </tr>
                     <tr>
                         <th scope="row">Жиры</th>
-                        <td>@Model.Fats г</td>
+                        <td>@Model.Fats.ToString("0") г</td>
                     </tr>
                     <tr>
                         <th scope="row">Углеводы</th>
-                        <td>@Model.Carbs г</td>
+                        <td>@Model.Carbs.ToString("0") г</td>
                     </tr>
                 </tbody>
             </table>

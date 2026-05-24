@@ -114,10 +114,10 @@ else
                     <tr>
                         <td>@dish.Name</td>
                         <td>@dish.CategoryName</td>
-                        <td>@dish.Calories</td>
-                        <td>@dish.Proteins</td>
-                        <td>@dish.Fats</td>
-                        <td>@dish.Carbs</td>
+                        <td>@dish.Calories.ToString("0")</td>
+                        <td>@dish.Proteins.ToString("0")</td>
+                        <td>@dish.Fats.ToString("0")</td>
+                        <td>@dish.Carbs.ToString("0")</td>
                         <td>@dish.CookingTime мин.</td>
                         <td>@(dish.MainIngredient ?? "Не указан")</td>
                         <td>@(dish.IsForChildren ? "Да" : "Нет")</td>
