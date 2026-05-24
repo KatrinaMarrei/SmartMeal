@@ -1,0 +1,52 @@
+@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h1 class="mb-0">Профиль</h1>
+    <a asp-controller="UserProfiles" asp-action="Edit" class="btn btn-primary">Редактировать профиль</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <h2 class="h4">Основная информация</h2>
+        <dl class="row">
+            <dt class="col-sm-5">ФИО</dt>
+            <dd class="col-sm-7">@Model.FullName</dd>
+
+            <dt class="col-sm-5">Email</dt>
+            <dd class="col-sm-7">@Model.Email</dd>
+
+            <dt class="col-sm-5">Пол</dt>
+            <dd class="col-sm-7">@(string.IsNullOrWhiteSpace(Model.Gender) ? "Не указан" : Model.Gender)</dd>
+
+            <dt class="col-sm-5">Возраст</dt>
+            <dd class="col-sm-7">@Model.Age</dd>
+
+            <dt class="col-sm-5">Вес</dt>
+            <dd class="col-sm-7">@Model.Weight.ToString("0.##") кг</dd>
+
+            <dt class="col-sm-5">Рост</dt>
+            <dd class="col-sm-7">@Model.Height.ToString("0.##") см</dd>
+        </dl>
+    </div>
+
+    <div class="col-lg-5">
+        <h2 class="h4">Цели и ограничения</h2>
+        <dl class="row">
+            <dt class="col-sm-6">Цель</dt>
+            <dd class="col-sm-6">@(string.IsNullOrWhiteSpace(Model.Goal) ? "Не указана" : Model.Goal)</dd>
+
+            <dt class="col-sm-6">Активность</dt>
+            <dd class="col-sm-6">@Model.ActivityLevel</dd>
+
+            <dt class="col-sm-6">Норма калорий</dt>
+            <dd class="col-sm-6">@Model.DailyCalories.ToString("0") ккал</dd>
+
+            <dt class="col-sm-6">Аллергены</dt>
+            <dd class="col-sm-6">@(Model.Allergens.Any() ? string.Join(", ", Model.Allergens.Select(a => a.Name)) : "Не указаны")</dd>
+        </dl>
+    </div>
+</div>
