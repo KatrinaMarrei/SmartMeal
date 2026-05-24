@@ -1,0 +1,93 @@
+@model MealPlanWeekViewModel
+
+@{
+    ViewData["Title"] = "План питания";
+}
+
+<div class="mb-4">
+    <h1>План питания</h1>
+    <p class="text-muted mb-1">Демо-пользователь: @Model.UserFullName</p>
+    <p class="text-muted mb-0">Неделя: @Model.WeekNumber. Цель на день: @Model.DailyCaloriesTarget ккал.</p>
+</div>
+
+<form asp-controller="MealPlans" asp-action="Save" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="WeekNumber" />
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">День</th>
+                    <th scope="col">Завтрак</th>
+                    <th scope="col">Обед</th>
+                    <th scope="col">Ужин</th>
+                    <th scope="col">Перекус</th>
+                    <th scope="col">Итого</th>
+                    <th scope="col">Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var dayIndex = 0; dayIndex < Model.Days.Count; dayIndex++)
+                {
+                    var day = Model.Days[dayIndex];
+
+                    <tr>
+                        <th scope="row">
+                            @day.DayName
+                            <input type="hidden" asp-for="Days[dayIndex].DayOfWeek" />
+                            <input type="hidden" asp-for="Days[dayIndex].DayName" />
+                        </th>
+
+                        @for (var cellIndex = 0; cellIndex < day.Cells.Count; cellIndex++)
+                        {
+                            var cell = day.Cells[cellIndex];
+
+                            <td>
+                                <input type="hidden" asp-for="Days[dayIndex].Cells[cellIndex].DayOfWeek" />
+                                <input type="hidden" asp-for="Days[dayIndex].Cells[cellIndex].MealType" />
+
+                                <label class="form-label visually-hidden" asp-for="Days[dayIndex].Cells[cellIndex].SelectedDishId">
+                                    @cell.MealType
+                                </label>
+                                <select asp-for="Days[dayIndex].Cells[cellIndex].SelectedDishId" class="form-select form-select-sm">
+                                    <option value="">Не выбрано</option>
+                                    @foreach (var dish in cell.DishOptions)
+                                    {
+                                        <option value="@dish.Id">@dish.Name (@dish.Calories ккал)</option>
+                                    }
+                                </select>
+
+                                @if (cell.SelectedDishId.HasValue)
+                                {
+                                    <div class="small text-muted mt-2">@cell.SelectedCalories ккал</div>
+                                }
+                            </td>
+                        }
+
+                        <td>
+                            <strong>@day.TotalCalories ккал</strong>
+                        </td>
+                        <td>
+                            <span class="@GetStatusClass(day.Status)">@day.Status</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить план</button>
+</form>
+
+@functions {
+    private static string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "В норме" => "badge bg-success",
+            "Превышение" => "badge bg-danger",
+            _ => "badge bg-warning text-dark"
+        };
+    }
+}
