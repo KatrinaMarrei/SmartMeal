@@ -17,6 +17,13 @@ else
         <p class="lead">@Model.Description</p>
     </div>
 
+    @if (Model.HasAllergyWarning)
+    {
+        <div class="alert alert-warning">
+            Содержит ваши аллергены: @string.Join(", ", Model.MatchingUserAllergenNames)
+        </div>
+    }
+
     <div class="row g-4">
         <div class="col-lg-7">
             <h2 class="h4">Состав</h2>

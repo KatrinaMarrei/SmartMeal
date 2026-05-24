@@ -34,6 +34,10 @@ namespace SmartMeal.Models.ViewModels
 
         public decimal SelectedCalories { get; set; }
 
+        public List<string> SelectedDishMatchingUserAllergenNames { get; set; } = new();
+
+        public bool HasAllergyWarning => SelectedDishMatchingUserAllergenNames.Any();
+
         public List<MealPlanDishOptionViewModel> DishOptions { get; set; } = new();
     }
 

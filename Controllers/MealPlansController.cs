@@ -52,11 +52,14 @@ namespace SmartMeal.Controllers
             var mealPlans = await _context.MealPlans
                 .AsNoTracking()
                 .Include(mp => mp.Dish)
+                    .ThenInclude(d => d!.DishAllergens)
+                        .ThenInclude(da => da.Allergen)
                 .Where(mp => mp.UserProfileId == DemoUserProfileId && mp.WeekNumber == weekNumber)
                 .ToListAsync();
 
+            var userAllergenIds = await LoadDemoUserAllergenIdsAsync();
             var dishesByMealType = await LoadDishOptionsByMealTypeAsync();
-            var model = BuildWeekViewModel(userProfile, weekNumber, mealPlans, dishesByMealType);
+            var model = BuildWeekViewModel(userProfile, weekNumber, mealPlans, dishesByMealType, userAllergenIds);
 
             return View(model);
         }
@@ -144,7 +147,8 @@ namespace SmartMeal.Controllers
             UserProfile userProfile,
             int weekNumber,
             List<MealPlan> mealPlans,
-            Dictionary<string, List<MealPlanDishOptionViewModel>> dishesByMealType)
+            Dictionary<string, List<MealPlanDishOptionViewModel>> dishesByMealType,
+            HashSet<int> userAllergenIds)
         {
             var plansBySlot = mealPlans
                 .GroupBy(mp => new { mp.DayOfWeek, mp.MealType })
@@ -178,6 +182,7 @@ namespace SmartMeal.Controllers
                         MealType = mealType,
                         SelectedDishId = mealPlan?.DishId,
                         SelectedCalories = selectedCalories,
+                        SelectedDishMatchingUserAllergenNames = GetMatchingUserAllergenNames(mealPlan?.Dish, userAllergenIds),
                         DishOptions = options ?? new List<MealPlanDishOptionViewModel>()
                     });
                     day.TotalCalories += selectedCalories;
@@ -188,6 +193,33 @@ namespace SmartMeal.Controllers
             }
 
             return model;
+        }
+
+        private async Task<HashSet<int>> LoadDemoUserAllergenIdsAsync()
+        {
+            var allergenIds = await _context.UserAllergens
+                .AsNoTracking()
+                .Where(ua => ua.UserProfileId == DemoUserProfileId)
+                .Select(ua => ua.AllergenId)
+                .Distinct()
+                .ToListAsync();
+
+            return allergenIds.ToHashSet();
+        }
+
+        private static List<string> GetMatchingUserAllergenNames(Dish? dish, HashSet<int> userAllergenIds)
+        {
+            if (dish == null || userAllergenIds.Count == 0)
+            {
+                return new List<string>();
+            }
+
+            return dish.DishAllergens
+                .Where(da => userAllergenIds.Contains(da.AllergenId) && da.Allergen != null)
+                .Select(da => da.Allergen!.Name)
+                .Distinct()
+                .OrderBy(name => name)
+                .ToList();
         }
 
         private async Task<Dictionary<string, List<MealPlanDishOptionViewModel>>> LoadDishOptionsByMealTypeAsync()

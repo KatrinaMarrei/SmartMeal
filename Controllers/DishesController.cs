@@ -68,6 +68,8 @@ namespace SmartMeal.Controllers
                 .ThenBy(d => d.Name)
                 .ToListAsync();
 
+            var userAllergenIds = await LoadDemoUserAllergenIdsAsync();
+
             var dishes = dishEntities
                 .Select(d => new DishCatalogItemViewModel
                 {
@@ -90,6 +92,8 @@ namespace SmartMeal.Controllers
                         .Where(da => da.Allergen != null)
                         .Select(da => da.Allergen!.Name)
                         .OrderBy(name => name)
+                        .ToList(),
+                    MatchingUserAllergenNames = GetMatchingUserAllergenNames(d, userAllergenIds)
                         .ToList()
                 })
                 .ToList();
@@ -240,6 +244,8 @@ namespace SmartMeal.Controllers
                 return View(new DishDetailsViewModel { IsFound = false });
             }
 
+            var userAllergenIds = await LoadDemoUserAllergenIdsAsync();
+
             var model = new DishDetailsViewModel
             {
                 IsFound = true,
@@ -265,10 +271,39 @@ namespace SmartMeal.Controllers
                     .Where(da => da.Allergen != null)
                     .Select(da => da.Allergen!.Name)
                     .OrderBy(name => name)
+                    .ToList(),
+                MatchingUserAllergenNames = GetMatchingUserAllergenNames(dish, userAllergenIds)
                     .ToList()
             };
 
             return View(model);
+        }
+
+        private async Task<HashSet<int>> LoadDemoUserAllergenIdsAsync()
+        {
+            var allergenIds = await _context.UserAllergens
+                .AsNoTracking()
+                .Where(ua => ua.UserProfileId == DemoUserProfileId)
+                .Select(ua => ua.AllergenId)
+                .Distinct()
+                .ToListAsync();
+
+            return allergenIds.ToHashSet();
+        }
+
+        private static List<string> GetMatchingUserAllergenNames(Dish dish, HashSet<int> userAllergenIds)
+        {
+            if (userAllergenIds.Count == 0)
+            {
+                return new List<string>();
+            }
+
+            return dish.DishAllergens
+                .Where(da => userAllergenIds.Contains(da.AllergenId) && da.Allergen != null)
+                .Select(da => da.Allergen!.Name)
+                .Distinct()
+                .OrderBy(name => name)
+                .ToList();
         }
 
         private async Task LoadDishCreateOptionsAsync(DishCreateViewModel model)

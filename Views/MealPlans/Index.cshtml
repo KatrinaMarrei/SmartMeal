@@ -62,6 +62,13 @@
                                 {
                                     <div class="small text-muted mt-2">@cell.SelectedCalories.ToString("0") ккал</div>
                                 }
+
+                                @if (cell.HasAllergyWarning)
+                                {
+                                    <div class="alert alert-warning py-1 px-2 mt-2 mb-0 small">
+                                        Содержит ваши аллергены: @string.Join(", ", cell.SelectedDishMatchingUserAllergenNames)
+                                    </div>
+                                }
                             </td>
                         }
 

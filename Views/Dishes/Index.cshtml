@@ -112,7 +112,15 @@ else
                 @foreach (var dish in Model.Dishes)
                 {
                     <tr>
-                        <td>@dish.Name</td>
+                        <td>
+                            <div>@dish.Name</div>
+                            @if (dish.HasAllergyWarning)
+                            {
+                                <div class="alert alert-warning py-1 px-2 mt-2 mb-0 small">
+                                    Содержит ваши аллергены: @string.Join(", ", dish.MatchingUserAllergenNames)
+                                </div>
+                            }
+                        </td>
                         <td>@dish.CategoryName</td>
                         <td>@dish.Calories.ToString("0")</td>
                         <td>@dish.Proteins.ToString("0")</td>
