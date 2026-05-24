@@ -1,0 +1,132 @@
+@model DishCreateViewModel
+
+@{
+    ViewData["Title"] = "Добавить рецепт";
+}
+
+<h1 class="mb-4">Добавить рецепт</h1>
+
+<form asp-controller="Dishes" asp-action="Create" method="post" class="row g-3">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="col-md-8">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="CategoryId" class="form-label"></label>
+        <select asp-for="CategoryId" class="form-select">
+            <option value="">Выберите категорию</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Calories" class="form-label"></label>
+        <input asp-for="Calories" class="form-control" type="number" min="0" max="10000" step="0.01" />
+        <span asp-validation-for="Calories" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Proteins" class="form-label"></label>
+        <input asp-for="Proteins" class="form-control" type="number" min="0" max="1000" step="0.01" />
+        <span asp-validation-for="Proteins" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Fats" class="form-label"></label>
+        <input asp-for="Fats" class="form-control" type="number" min="0" max="1000" step="0.01" />
+        <span asp-validation-for="Fats" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Carbs" class="form-label"></label>
+        <input asp-for="Carbs" class="form-control" type="number" min="0" max="1000" step="0.01" />
+        <span asp-validation-for="Carbs" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="CookingTime" class="form-label"></label>
+        <input asp-for="CookingTime" class="form-control" type="number" min="0" max="1000" />
+        <span asp-validation-for="CookingTime" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-8">
+        <label asp-for="MainIngredient" class="form-label"></label>
+        <input asp-for="MainIngredient" class="form-control" />
+        <span asp-validation-for="MainIngredient" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="IngredientsList" class="form-label"></label>
+        <textarea asp-for="IngredientsList" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="IngredientsList" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <div class="form-check">
+            <input asp-for="IsForChildren" class="form-check-input" />
+            <label asp-for="IsForChildren" class="form-check-label"></label>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <fieldset>
+            <legend class="h5">Типы питания</legend>
+            <span asp-validation-for="SelectedDietTypeIds" class="text-danger"></span>
+            @foreach (var dietType in Model.DietTypes)
+            {
+                <div class="form-check d-flex align-items-center gap-2 mb-1">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="SelectedDietTypeIds"
+                           id="dietType_@dietType.Id"
+                           value="@dietType.Id"
+                           checked="@Model.SelectedDietTypeIds.Contains(dietType.Id)" />
+                    <label class="form-check-label mb-0" for="dietType_@dietType.Id">@dietType.Name</label>
+                </div>
+            }
+        </fieldset>
+    </div>
+
+    <div class="col-md-6">
+        <fieldset>
+            <legend class="h5">Аллергены</legend>
+            <span asp-validation-for="SelectedAllergenIds" class="text-danger"></span>
+            @foreach (var allergen in Model.Allergens)
+            {
+                <div class="form-check d-flex align-items-center gap-2 mb-1">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="SelectedAllergenIds"
+                           id="allergen_@allergen.Id"
+                           value="@allergen.Id"
+                           checked="@Model.SelectedAllergenIds.Contains(allergen.Id)" />
+                    <label class="form-check-label mb-0" for="allergen_@allergen.Id">@allergen.Name</label>
+                </div>
+            }
+        </fieldset>
+    </div>
+
+    <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Сохранить рецепт</button>
+        <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary">Вернуться в каталог</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

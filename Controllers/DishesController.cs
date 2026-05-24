@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartMeal.Data;
+using SmartMeal.Models;
 using SmartMeal.Models.ViewModels;
 
 namespace SmartMeal.Controllers
 {
     public class DishesController : Controller
     {
+        private const int DemoUserProfileId = 1;
+
         private readonly ApplicationDbContext _context;
 
         public DishesController(ApplicationDbContext context)
@@ -139,6 +142,88 @@ namespace SmartMeal.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Create()
+        {
+            var model = new DishCreateViewModel();
+            await LoadDishCreateOptionsAsync(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(DishCreateViewModel model)
+        {
+            var selectedDietTypeIds = model.SelectedDietTypeIds.Distinct().ToList();
+            var selectedAllergenIds = model.SelectedAllergenIds.Distinct().ToList();
+
+            var categoryExists = await _context.Categories
+                .AsNoTracking()
+                .AnyAsync(c => c.Id == model.CategoryId);
+            if (!categoryExists)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Выберите существующую категорию.");
+            }
+
+            var validDietTypeIds = await _context.DietTypes
+                .AsNoTracking()
+                .Where(dt => selectedDietTypeIds.Contains(dt.Id))
+                .Select(dt => dt.Id)
+                .ToListAsync();
+            if (validDietTypeIds.Count != selectedDietTypeIds.Count)
+            {
+                ModelState.AddModelError(nameof(model.SelectedDietTypeIds), "Выберите существующие типы питания.");
+            }
+
+            var validAllergenIds = await _context.Allergens
+                .AsNoTracking()
+                .Where(a => selectedAllergenIds.Contains(a.Id))
+                .Select(a => a.Id)
+                .ToListAsync();
+            if (validAllergenIds.Count != selectedAllergenIds.Count)
+            {
+                ModelState.AddModelError(nameof(model.SelectedAllergenIds), "Выберите существующие аллергены.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.SelectedDietTypeIds = selectedDietTypeIds;
+                model.SelectedAllergenIds = selectedAllergenIds;
+                await LoadDishCreateOptionsAsync(model);
+
+                return View(model);
+            }
+
+            var dish = new Dish
+            {
+                Name = model.Name,
+                Description = model.Description,
+                CategoryId = model.CategoryId,
+                Calories = model.Calories,
+                Proteins = model.Proteins,
+                Fats = model.Fats,
+                Carbs = model.Carbs,
+                CookingTime = model.CookingTime,
+                ImageUrl = null,
+                IngredientsList = model.IngredientsList,
+                MainIngredient = model.MainIngredient,
+                IsForChildren = model.IsForChildren,
+                IsCustom = true,
+                CreatedByUserProfileId = DemoUserProfileId,
+                DishDietTypes = selectedDietTypeIds
+                    .Select(dietTypeId => new DishDietType { DietTypeId = dietTypeId })
+                    .ToList(),
+                DishAllergens = selectedAllergenIds
+                    .Select(allergenId => new DishAllergen { AllergenId = allergenId })
+                    .ToList()
+            };
+
+            _context.Dishes.Add(dish);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = dish.Id });
+        }
+
         public async Task<IActionResult> Details(int id)
         {
             var dish = await _context.Dishes
@@ -184,6 +269,39 @@ namespace SmartMeal.Controllers
             };
 
             return View(model);
+        }
+
+        private async Task LoadDishCreateOptionsAsync(DishCreateViewModel model)
+        {
+            model.Categories = await _context.Categories
+                .AsNoTracking()
+                .OrderBy(c => c.SortOrder)
+                .Select(c => new FilterOptionViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToListAsync();
+
+            model.DietTypes = await _context.DietTypes
+                .AsNoTracking()
+                .OrderBy(dt => dt.Name)
+                .Select(dt => new FilterOptionViewModel
+                {
+                    Id = dt.Id,
+                    Name = dt.Name
+                })
+                .ToListAsync();
+
+            model.Allergens = await _context.Allergens
+                .AsNoTracking()
+                .OrderBy(a => a.Name)
+                .Select(a => new FilterOptionViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name
+                })
+                .ToListAsync();
         }
     }
 }
