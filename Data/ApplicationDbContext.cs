@@ -125,6 +125,22 @@ namespace SmartMeal.Data
                 new Allergen { Id = 8, Name = "Соя", Description = "Соя и соевые продукты." }
             );
 
+            modelBuilder.Entity<UserProfile>().HasData(
+                new UserProfile
+                {
+                    Id = 1,
+                    FullName = "Демо-пользователь",
+                    Email = "demo@smartmeal.local",
+                    Gender = "Женский",
+                    Age = 22,
+                    Weight = 65m,
+                    Height = 170m,
+                    Goal = "Поддержание веса",
+                    ActivityLevel = 3,
+                    DailyCalories = 2000
+                }
+            );
+
             modelBuilder.Entity<Dish>().HasData(
                 new Dish
                 {
