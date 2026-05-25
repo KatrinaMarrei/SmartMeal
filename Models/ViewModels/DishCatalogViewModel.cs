@@ -4,6 +4,8 @@ namespace SmartMeal.Models.ViewModels
     {
         public int? CategoryId { get; set; }
 
+        public string? SearchQuery { get; set; }
+
         public string? MainIngredient { get; set; }
 
         public int? MaxCookingTime { get; set; }

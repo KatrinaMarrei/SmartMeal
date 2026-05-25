@@ -11,6 +11,11 @@
 
 <form asp-controller="Dishes" asp-action="Index" method="get" class="row g-3 mb-4">
     <div class="col-md-4">
+        <label for="searchQuery" class="form-label">Поиск</label>
+        <input id="searchQuery" name="searchQuery" type="search" class="form-control" value="@Model.SearchQuery" placeholder="Название, ингредиент или состав" />
+    </div>
+
+    <div class="col-md-4">
         <label for="categoryId" class="form-label">Категория</label>
         <select id="categoryId" name="categoryId" class="form-select">
             <option value="">Все категории</option>
@@ -85,7 +90,7 @@
 @if (!Model.Dishes.Any())
 {
     <div class="alert alert-info">
-        По выбранным фильтрам блюда не найдены.
+        По выбранным условиям блюда не найдены.
     </div>
 }
 else

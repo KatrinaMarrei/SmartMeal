@@ -19,6 +19,7 @@ namespace SmartMeal.Controllers
 
         public async Task<IActionResult> Index(
             int? categoryId,
+            string? searchQuery,
             string? mainIngredient,
             int? maxCookingTime,
             bool? isForChildren,
@@ -36,6 +37,15 @@ namespace SmartMeal.Controllers
             if (categoryId.HasValue)
             {
                 query = query.Where(d => d.CategoryId == categoryId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                var normalizedSearchQuery = searchQuery.Trim();
+                query = query.Where(d =>
+                    d.Name.Contains(normalizedSearchQuery) ||
+                    (d.MainIngredient != null && d.MainIngredient.Contains(normalizedSearchQuery)) ||
+                    d.IngredientsList.Contains(normalizedSearchQuery));
             }
 
             if (!string.IsNullOrWhiteSpace(mainIngredient))
@@ -101,6 +111,7 @@ namespace SmartMeal.Controllers
             var model = new DishCatalogViewModel
             {
                 CategoryId = categoryId,
+                SearchQuery = searchQuery,
                 MainIngredient = mainIngredient,
                 MaxCookingTime = maxCookingTime,
                 IsForChildren = isForChildren,
