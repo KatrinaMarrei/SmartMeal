@@ -1,0 +1,167 @@
+@model WeeklyReportViewModel
+
+@{
+    ViewData["Title"] = "Недельный отчёт";
+}
+
+<div class="mb-4">
+    <h1>Недельный отчёт</h1>
+    <p class="text-muted mb-1">Демо-пользователь: @Model.DemoUserDisplayName</p>
+    <p class="text-muted mb-0">Неделя: @Model.WeekNumber</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="border rounded p-3 h-100">
+            <div class="text-muted small">Неделя</div>
+            <div class="fs-3 fw-semibold">@Model.WeekNumber</div>
+            <div class="text-muted small">текущая ISO-неделя</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="border rounded p-3 h-100">
+            <div class="text-muted small">Цель на день</div>
+            <div class="fs-3 fw-semibold">@Model.DailyCalorieTarget.ToString("0")</div>
+            <div class="text-muted small">ккал</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="border rounded p-3 h-100">
+            <div class="text-muted small">Калории за неделю</div>
+            <div class="fs-3 fw-semibold">@Model.WeeklyTotalCalories.ToString("0")</div>
+            <div class="text-muted small">ккал</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="border rounded p-3 h-100">
+            <div class="text-muted small">Среднее за день</div>
+            <div class="fs-3 fw-semibold">@Model.AverageCaloriesPerDay.ToString("0")</div>
+            <div class="text-muted small">ккал</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="border rounded p-3 h-100">
+            <h2 class="h5 mb-3">БЖУ за неделю</h2>
+            <div class="row text-center">
+                <div class="col-4">
+                    <div class="fs-4 fw-semibold">@Model.WeeklyTotalProteins.ToString("0")</div>
+                    <div class="text-muted small">белки, г</div>
+                </div>
+                <div class="col-4">
+                    <div class="fs-4 fw-semibold">@Model.WeeklyTotalFats.ToString("0")</div>
+                    <div class="text-muted small">жиры, г</div>
+                </div>
+                <div class="col-4">
+                    <div class="fs-4 fw-semibold">@Model.WeeklyTotalCarbs.ToString("0")</div>
+                    <div class="text-muted small">углеводы, г</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="border rounded p-3 h-100">
+            <h2 class="h5 mb-3">Дни по статусам</h2>
+            <div class="row text-center">
+                <div class="col-4">
+                    <div class="fs-4 fw-semibold">@Model.DaysBelowTargetCount</div>
+                    <div class="text-muted small">недобор</div>
+                </div>
+                <div class="col-4">
+                    <div class="fs-4 fw-semibold">@Model.DaysInTargetRangeCount</div>
+                    <div class="text-muted small">в норме</div>
+                </div>
+                <div class="col-4">
+                    <div class="fs-4 fw-semibold">@Model.DaysAboveTargetCount</div>
+                    <div class="text-muted small">превышение</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <h2 class="h4 mb-3">Отчёт по дням</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">День</th>
+                    <th scope="col">Калории</th>
+                    <th scope="col">Белки</th>
+                    <th scope="col">Жиры</th>
+                    <th scope="col">Углеводы</th>
+                    <th scope="col">Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var day in Model.Days)
+                {
+                    <tr>
+                        <th scope="row">@day.DayName</th>
+                        <td>
+                            <div class="fw-semibold">@day.Calories.ToString("0") ккал</div>
+                            <div class="progress mt-2" role="progressbar" aria-label="Калории за день" aria-valuenow="@day.CalorieProgressPercent" aria-valuemin="0" aria-valuemax="100">
+                                <div class="@GetProgressClass(day.Status)" style="width: @day.CalorieProgressPercent%"></div>
+                            </div>
+                        </td>
+                        <td>@day.Proteins.ToString("0") г</td>
+                        <td>@day.Fats.ToString("0") г</td>
+                        <td>@day.Carbs.ToString("0") г</td>
+                        <td>
+                            <span class="@GetStatusClass(day.Status)">@day.Status</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mb-4">
+    <h2 class="h4 mb-3">Предупреждения по аллергенам</h2>
+    @if (Model.HasAllergyWarnings)
+    {
+        <div class="list-group">
+            @foreach (var warning in Model.AllergyWarnings)
+            {
+                <div class="list-group-item">
+                    <div class="fw-semibold">@warning.DayName, @warning.MealType: @warning.DishName</div>
+                    <div class="small text-warning-emphasis">
+                        Содержит ваши аллергены: @string.Join(", ", warning.AllergenNames)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success mb-0">
+            За неделю предупреждений по аллергенам нет.
+        </div>
+    }
+</div>
+
+@functions {
+    private static string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "В норме" => "badge bg-success",
+            "Превышение" => "badge bg-danger",
+            _ => "badge bg-warning text-dark"
+        };
+    }
+
+    private static string GetProgressClass(string status)
+    {
+        return status switch
+        {
+            "В норме" => "progress-bar bg-success",
+            "Превышение" => "progress-bar bg-danger",
+            _ => "progress-bar bg-warning"
+        };
+    }
+}
