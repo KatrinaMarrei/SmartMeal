@@ -1,0 +1,69 @@
+@model List<DishCatalogItemViewModel>
+
+@{
+    ViewData["Title"] = "Мои рецепты";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h1 class="mb-0">Мои рецепты</h1>
+    <a asp-controller="Dishes" asp-action="Create" class="btn btn-primary">Добавить рецепт</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        У вас пока нет добавленных рецептов.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Ккал</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                    <th>Время</th>
+                    <th>Ингредиент</th>
+                    <th>Типы питания</th>
+                    <th>Аллергены</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var recipe in Model)
+                {
+                    <tr>
+                        <td>
+                            <div>@recipe.Name</div>
+                            @if (recipe.HasAllergyWarning)
+                            {
+                                <div class="alert alert-warning py-1 px-2 mt-2 mb-0 small">
+                                    Содержит ваши аллергены: @string.Join(", ", recipe.MatchingUserAllergenNames)
+                                </div>
+                            }
+                        </td>
+                        <td>@recipe.CategoryName</td>
+                        <td>@recipe.Calories.ToString("0")</td>
+                        <td>@recipe.Proteins.ToString("0")</td>
+                        <td>@recipe.Fats.ToString("0")</td>
+                        <td>@recipe.Carbs.ToString("0")</td>
+                        <td>@recipe.CookingTime мин.</td>
+                        <td>@(recipe.MainIngredient ?? "Не указан")</td>
+                        <td>@(recipe.DietTypeNames.Any() ? string.Join(", ", recipe.DietTypeNames) : "Не указано")</td>
+                        <td>@(recipe.AllergenNames.Any() ? string.Join(", ", recipe.AllergenNames) : "Не указано")</td>
+                        <td>
+                            <a asp-controller="Dishes" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-sm btn-outline-primary">
+                                Подробнее
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
