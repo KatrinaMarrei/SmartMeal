@@ -20,6 +20,29 @@ namespace SmartMeal.Models.ViewModels
 
         public decimal WeeklyTotalCarbs { get; set; }
 
+        public decimal MaxDailyCaloriesForChart
+        {
+            get
+            {
+                var maxDayCalories = Days.Count == 0 ? 0m : Days.Max(day => day.Calories);
+                var maxCalories = Math.Max(maxDayCalories, DailyCalorieTarget);
+
+                return maxCalories <= 0m ? 1m : maxCalories;
+            }
+        }
+
+        public int DailyTargetChartPercent => GetPercent(DailyCalorieTarget, MaxDailyCaloriesForChart);
+
+        public decimal WeeklyMacroTotal => WeeklyTotalProteins + WeeklyTotalFats + WeeklyTotalCarbs;
+
+        public bool HasWeeklyMacros => WeeklyMacroTotal > 0m;
+
+        public int WeeklyProteinsPercent => GetPercent(WeeklyTotalProteins, WeeklyMacroTotal);
+
+        public int WeeklyFatsPercent => GetPercent(WeeklyTotalFats, WeeklyMacroTotal);
+
+        public int WeeklyCarbsPercent => GetPercent(WeeklyTotalCarbs, WeeklyMacroTotal);
+
         public int DaysBelowTargetCount => Days.Count(day => day.Status == "Недобор");
 
         public int DaysInTargetRangeCount => Days.Count(day => day.Status == "В норме");
@@ -29,6 +52,21 @@ namespace SmartMeal.Models.ViewModels
         public List<WeeklyReportAllergyWarningViewModel> AllergyWarnings { get; set; } = new();
 
         public bool HasAllergyWarnings => AllergyWarnings.Any();
+
+        public int GetCalorieChartPercent(decimal calories)
+        {
+            return GetPercent(calories, MaxDailyCaloriesForChart);
+        }
+
+        private static int GetPercent(decimal value, decimal total)
+        {
+            if (value <= 0m || total <= 0m)
+            {
+                return 0;
+            }
+
+            return (int)Math.Min(Math.Round(value / total * 100m), 100m);
+        }
     }
 
     public class WeeklyReportDayViewModel

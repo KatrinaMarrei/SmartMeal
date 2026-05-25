@@ -20,3 +20,152 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.report-calorie-chart {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.report-calorie-chart__row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(9rem, 3fr) minmax(5rem, auto) minmax(6rem, auto);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.report-calorie-chart__day,
+.report-calorie-chart__value {
+  font-weight: 600;
+}
+
+.report-calorie-chart__track {
+  position: relative;
+  height: 1.25rem;
+  overflow: hidden;
+  background-color: #e9ecef;
+  border-radius: 0.375rem;
+}
+
+.report-calorie-chart__bar {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  border-radius: 0.375rem;
+}
+
+.report-calorie-chart__target {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 0.125rem;
+  background-color: #212529;
+  transform: translateX(-50%);
+}
+
+.report-calorie-chart__target-legend {
+  display: inline-block;
+  width: 1.25rem;
+  height: 0.125rem;
+  background-color: #212529;
+}
+
+.report-calorie-chart__status {
+  text-align: right;
+}
+
+.report-macro-chart {
+  width: 100%;
+}
+
+.report-macro-svg {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  height: auto;
+  margin-inline: auto;
+}
+
+.report-macro-svg__track,
+.report-macro-svg__hole {
+  fill: #fff;
+}
+
+.report-macro-svg__track {
+  stroke: #e9ecef;
+  stroke-width: 34;
+}
+
+.report-macro-svg__segment {
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+.report-macro-svg__segment--proteins,
+.report-macro-svg__marker--proteins {
+  fill: #0d6efd;
+}
+
+.report-macro-svg__segment--fats,
+.report-macro-svg__marker--fats {
+  fill: #fd7e14;
+}
+
+.report-macro-svg__segment--carbs,
+.report-macro-svg__marker--carbs {
+  fill: #198754;
+}
+
+.report-macro-svg__connector {
+  stroke: #6c757d;
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.report-macro-svg__label,
+.report-macro-svg__percent,
+.report-macro-svg__total {
+  fill: #212529;
+  font-family: inherit;
+}
+
+.report-macro-svg__label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.report-macro-svg__percent {
+  fill: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: rgb(0 0 0 / 35%);
+  stroke-linejoin: round;
+  stroke-width: 3px;
+}
+
+.report-macro-svg__total-value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.report-macro-svg__total-label {
+  fill: #6c757d;
+  font-size: 12px;
+}
+
+@media (max-width: 767.98px) {
+  .report-calorie-chart__row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .report-calorie-chart__track {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .report-calorie-chart__value,
+  .report-calorie-chart__status {
+    text-align: right;
+  }
+}

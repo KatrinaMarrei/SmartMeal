@@ -1,3 +1,4 @@
+@using System.Globalization
 @model WeeklyReportViewModel
 
 @{
@@ -83,6 +84,94 @@
 </div>
 
 <div class="mb-4">
+    <h2 class="h4 mb-3">Визуализация</h2>
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="border rounded p-3 h-100">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <h3 class="h5 mb-0">Калории по дням</h3>
+                    <div class="text-muted small">Цель: @Model.DailyCalorieTarget.ToString("0") ккал</div>
+                </div>
+                <div class="report-calorie-chart" aria-label="График калорий по дням недели">
+                    @foreach (var day in Model.Days)
+                    {
+                        var caloriePercent = Model.GetCalorieChartPercent(day.Calories);
+
+                        <div class="report-calorie-chart__row">
+                            <div class="report-calorie-chart__day">@day.DayName</div>
+                            <div class="report-calorie-chart__track">
+                                <div class="report-calorie-chart__target" style="left: @Model.DailyTargetChartPercent%" aria-hidden="true"></div>
+                                <div class="@GetCalorieChartBarClass(day.Status)" style="width: @caloriePercent%"></div>
+                            </div>
+                            <div class="report-calorie-chart__value">@day.Calories.ToString("0") ккал</div>
+                            <div class="report-calorie-chart__status">
+                                <span class="@GetStatusClass(day.Status)">@day.Status</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="d-flex align-items-center gap-2 mt-3 text-muted small">
+                    <span class="report-calorie-chart__target-legend"></span>
+                    <span>линия дневной цели</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="border rounded p-3 h-100">
+                <h3 class="h5 mb-3">БЖУ за неделю</h3>
+                @if (Model.HasWeeklyMacros)
+                {
+                    var macroSlices = BuildMacroSlices(
+                        Model.WeeklyTotalProteins,
+                        Model.WeeklyTotalFats,
+                        Model.WeeklyTotalCarbs,
+                        Model.WeeklyProteinsPercent,
+                        Model.WeeklyFatsPercent,
+                        Model.WeeklyCarbsPercent);
+
+                    <svg class="report-macro-svg"
+                         viewBox="0 0 420 260"
+                         role="img"
+                         aria-label="Соотношение БЖУ за неделю: белки @Model.WeeklyProteinsPercent процентов, жиры @Model.WeeklyFatsPercent процентов, углеводы @Model.WeeklyCarbsPercent процентов">
+                        <circle class="report-macro-svg__track" cx="210" cy="130" r="78"></circle>
+                        @foreach (var slice in macroSlices)
+                        {
+                            if (!string.IsNullOrEmpty(slice.Path))
+                            {
+                                <path class="@slice.SegmentClass" d="@slice.Path"></path>
+                            }
+
+                            <line class="report-macro-svg__connector" x1="@slice.ConnectorStartX" y1="@slice.ConnectorStartY" x2="@slice.ConnectorEndX" y2="@slice.ConnectorEndY"></line>
+                            <circle class="@slice.MarkerClass" cx="@slice.ConnectorStartX" cy="@slice.ConnectorStartY" r="3"></circle>
+                            @Html.Raw(BuildSvgText(
+                                "report-macro-svg__label",
+                                slice.LabelX,
+                                slice.LabelY,
+                                slice.LabelAnchor,
+                                $"{slice.Name} — {slice.Grams.ToString("0")} г"))
+                            @Html.Raw(BuildSvgText(
+                                "report-macro-svg__percent",
+                                slice.PercentX,
+                                slice.PercentY,
+                                "middle",
+                                $"{slice.Percent}%"))
+                        }
+                        <circle class="report-macro-svg__hole" cx="210" cy="130" r="44"></circle>
+                        @Html.Raw(BuildSvgTotalText(Model.WeeklyMacroTotal))
+                    </svg>
+                }
+                else
+                {
+                    <div class="alert alert-secondary mb-0">
+                        За неделю нет данных по БЖУ для визуализации.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
     <h2 class="h4 mb-3">Отчёт по дням</h2>
     <div class="table-responsive">
         <table class="table table-bordered align-middle">
@@ -154,6 +243,189 @@
             _ => "badge bg-warning text-dark"
         };
     }
+
+    private static string GetCalorieChartBarClass(string status)
+    {
+        return status switch
+        {
+            "В норме" => "report-calorie-chart__bar bg-success",
+            "Превышение" => "report-calorie-chart__bar bg-danger",
+            _ => "report-calorie-chart__bar bg-warning"
+        };
+    }
+
+    private static List<MacroSliceViewModel> BuildMacroSlices(
+        decimal proteins,
+        decimal fats,
+        decimal carbs,
+        int proteinsPercent,
+        int fatsPercent,
+        int carbsPercent)
+    {
+        const double centerX = 210d;
+        const double centerY = 130d;
+        const double outerRadius = 78d;
+        const double innerRadius = 44d;
+        const double labelRadius = 61d;
+
+        var specs = new[]
+        {
+            new MacroSliceSpec("Белки", proteins, proteinsPercent, "report-macro-svg__segment report-macro-svg__segment--proteins", "report-macro-svg__marker report-macro-svg__marker--proteins", 20d, 58d, "start", 126d, 58d),
+            new MacroSliceSpec("Жиры", fats, fatsPercent, "report-macro-svg__segment report-macro-svg__segment--fats", "report-macro-svg__marker report-macro-svg__marker--fats", 300d, 58d, "start", 294d, 58d),
+            new MacroSliceSpec("Углеводы", carbs, carbsPercent, "report-macro-svg__segment report-macro-svg__segment--carbs", "report-macro-svg__marker report-macro-svg__marker--carbs", 300d, 210d, "start", 294d, 210d)
+        };
+
+        var total = Math.Max(proteins + fats + carbs, 1m);
+        var fallbackAngles = new[] { -160d, -20d, 115d };
+        var currentAngle = -90d;
+        var slices = new List<MacroSliceViewModel>();
+
+        for (var index = 0; index < specs.Length; index++)
+        {
+            var spec = specs[index];
+            var sweep = spec.Grams <= 0m ? 0d : (double)(spec.Grams / total * 360m);
+            var startAngle = currentAngle;
+            var endAngle = currentAngle + sweep;
+            var midAngle = sweep <= 0d ? fallbackAngles[index] : startAngle + sweep / 2d;
+            currentAngle = endAngle;
+
+            var connectorStart = PointOnCircle(centerX, centerY, outerRadius + 2d, midAngle);
+            var percentPoint = PointOnCircle(centerX, centerY, labelRadius, midAngle);
+
+            slices.Add(new MacroSliceViewModel
+            {
+                Name = spec.Name,
+                Grams = spec.Grams,
+                Percent = spec.Percent,
+                SegmentClass = spec.SegmentClass,
+                MarkerClass = spec.MarkerClass,
+                Path = sweep <= 0d ? string.Empty : BuildDonutPath(centerX, centerY, outerRadius, innerRadius, startAngle, endAngle),
+                ConnectorStartX = FormatSvgNumber(connectorStart.X),
+                ConnectorStartY = FormatSvgNumber(connectorStart.Y),
+                ConnectorEndX = FormatSvgNumber(spec.ConnectorEndX),
+                ConnectorEndY = FormatSvgNumber(spec.ConnectorEndY),
+                LabelX = FormatSvgNumber(spec.LabelX),
+                LabelY = FormatSvgNumber(spec.LabelY),
+                LabelAnchor = spec.LabelAnchor,
+                PercentX = FormatSvgNumber(percentPoint.X),
+                PercentY = FormatSvgNumber(percentPoint.Y)
+            });
+        }
+
+        return slices;
+    }
+
+    private static string BuildDonutPath(
+        double centerX,
+        double centerY,
+        double outerRadius,
+        double innerRadius,
+        double startAngle,
+        double endAngle)
+    {
+        var adjustedEndAngle = endAngle - startAngle >= 360d ? endAngle - 0.01d : endAngle;
+        var outerStart = PointOnCircle(centerX, centerY, outerRadius, startAngle);
+        var outerEnd = PointOnCircle(centerX, centerY, outerRadius, adjustedEndAngle);
+        var innerEnd = PointOnCircle(centerX, centerY, innerRadius, adjustedEndAngle);
+        var innerStart = PointOnCircle(centerX, centerY, innerRadius, startAngle);
+        var largeArcFlag = adjustedEndAngle - startAngle > 180d ? 1 : 0;
+
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "M {0} {1} A {2} {2} 0 {3} 1 {4} {5} L {6} {7} A {8} {8} 0 {3} 0 {9} {10} Z",
+            FormatSvgNumber(outerStart.X),
+            FormatSvgNumber(outerStart.Y),
+            FormatSvgNumber(outerRadius),
+            largeArcFlag,
+            FormatSvgNumber(outerEnd.X),
+            FormatSvgNumber(outerEnd.Y),
+            FormatSvgNumber(innerEnd.X),
+            FormatSvgNumber(innerEnd.Y),
+            FormatSvgNumber(innerRadius),
+            FormatSvgNumber(innerStart.X),
+            FormatSvgNumber(innerStart.Y));
+    }
+
+    private static SvgPoint PointOnCircle(double centerX, double centerY, double radius, double angleDegrees)
+    {
+        var radians = angleDegrees * Math.PI / 180d;
+
+        return new SvgPoint(
+            centerX + radius * Math.Cos(radians),
+            centerY + radius * Math.Sin(radians));
+    }
+
+    private static string FormatSvgNumber(double value)
+    {
+        return value.ToString("0.###", CultureInfo.InvariantCulture);
+    }
+
+    private static string BuildSvgText(string cssClass, string x, string y, string textAnchor, string text)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "<text class=\"{0}\" x=\"{1}\" y=\"{2}\" text-anchor=\"{3}\">{4}</text>",
+            cssClass,
+            x,
+            y,
+            textAnchor,
+            text);
+    }
+
+    private static string BuildSvgTotalText(decimal total)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "<text class=\"report-macro-svg__total\" x=\"210\" y=\"126\" text-anchor=\"middle\"><tspan class=\"report-macro-svg__total-value\" x=\"210\">{0} г</tspan><tspan class=\"report-macro-svg__total-label\" x=\"210\" dy=\"18\">всего</tspan></text>",
+            total.ToString("0"));
+    }
+
+    private sealed record MacroSliceSpec(
+        string Name,
+        decimal Grams,
+        int Percent,
+        string SegmentClass,
+        string MarkerClass,
+        double LabelX,
+        double LabelY,
+        string LabelAnchor,
+        double ConnectorEndX,
+        double ConnectorEndY);
+
+    private sealed class MacroSliceViewModel
+    {
+        public string Name { get; init; } = string.Empty;
+
+        public decimal Grams { get; init; }
+
+        public int Percent { get; init; }
+
+        public string SegmentClass { get; init; } = string.Empty;
+
+        public string MarkerClass { get; init; } = string.Empty;
+
+        public string Path { get; init; } = string.Empty;
+
+        public string ConnectorStartX { get; init; } = string.Empty;
+
+        public string ConnectorStartY { get; init; } = string.Empty;
+
+        public string ConnectorEndX { get; init; } = string.Empty;
+
+        public string ConnectorEndY { get; init; } = string.Empty;
+
+        public string LabelX { get; init; } = string.Empty;
+
+        public string LabelY { get; init; } = string.Empty;
+
+        public string LabelAnchor { get; init; } = string.Empty;
+
+        public string PercentX { get; init; } = string.Empty;
+
+        public string PercentY { get; init; } = string.Empty;
+    }
+
+    private readonly record struct SvgPoint(double X, double Y);
 
     private static string GetProgressClass(string status)
     {
