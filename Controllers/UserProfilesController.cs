@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartMeal.Data;
 using SmartMeal.Models;
 using SmartMeal.Models.ViewModels;
+using SmartMeal.Services;
 
 namespace SmartMeal.Controllers
 {
@@ -72,6 +73,22 @@ namespace SmartMeal.Controllers
                 ModelState.AddModelError(nameof(model.SelectedAllergenIds), "Выберите существующие аллергены.");
             }
 
+            if (CalorieCalculator.TryCalculate(
+                model.Gender,
+                model.Age,
+                model.Weight,
+                model.Height,
+                model.ActivityLevel,
+                model.Goal,
+                out var calculatedDailyCalories))
+            {
+                model.DailyCalories = calculatedDailyCalories;
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Не удалось рассчитать норму калорий. Проверьте пол, возраст, вес, рост, уровень активности и цель.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.SelectedAllergenIds = selectedAllergenIds;
@@ -97,7 +114,7 @@ namespace SmartMeal.Controllers
             userProfile.Height = model.Height;
             userProfile.Goal = model.Goal;
             userProfile.ActivityLevel = model.ActivityLevel;
-            userProfile.DailyCalories = model.DailyCalories;
+            userProfile.DailyCalories = calculatedDailyCalories;
 
             _context.UserAllergens.RemoveRange(userProfile.UserAllergens);
 

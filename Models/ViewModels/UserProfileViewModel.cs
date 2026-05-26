@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SmartMeal.Models.ViewModels
 {
@@ -49,5 +50,27 @@ namespace SmartMeal.Models.ViewModels
         public List<int> SelectedAllergenIds { get; set; } = new();
 
         public List<FilterOptionViewModel> Allergens { get; set; } = new();
+
+        public List<SelectListItem> GenderOptions { get; } = new()
+        {
+            new SelectListItem { Value = "Женский", Text = "Женский" },
+            new SelectListItem { Value = "Мужской", Text = "Мужской" }
+        };
+
+        public List<SelectListItem> GoalOptions { get; } = new()
+        {
+            new SelectListItem { Value = "Снижение веса", Text = "Снижение веса" },
+            new SelectListItem { Value = "Поддержание веса", Text = "Поддержание веса" },
+            new SelectListItem { Value = "Набор массы", Text = "Набор массы" }
+        };
+
+        public List<SelectListItem> ActivityLevelOptions { get; } = new()
+        {
+            new SelectListItem { Value = "1", Text = "1 - минимальная активность" },
+            new SelectListItem { Value = "2", Text = "2 - лёгкая активность" },
+            new SelectListItem { Value = "3", Text = "3 - умеренная активность" },
+            new SelectListItem { Value = "4", Text = "4 - высокая активность" },
+            new SelectListItem { Value = "5", Text = "5 - очень высокая активность" }
+        };
     }
 }

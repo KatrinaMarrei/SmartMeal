@@ -25,7 +25,9 @@
 
     <div class="col-md-4">
         <label asp-for="Gender" class="form-label"></label>
-        <input asp-for="Gender" class="form-control" />
+        <select asp-for="Gender" asp-items="Model.GenderOptions" class="form-select">
+            <option value="">Выберите пол</option>
+        </select>
         <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
 
@@ -49,20 +51,24 @@
 
     <div class="col-md-6">
         <label asp-for="Goal" class="form-label"></label>
-        <input asp-for="Goal" class="form-control" />
+        <select asp-for="Goal" asp-items="Model.GoalOptions" class="form-select">
+            <option value="">Выберите цель</option>
+        </select>
         <span asp-validation-for="Goal" class="text-danger"></span>
     </div>
 
     <div class="col-md-3">
         <label asp-for="ActivityLevel" class="form-label"></label>
-        <input asp-for="ActivityLevel" class="form-control" type="number" min="1" max="5" />
+        <select asp-for="ActivityLevel" asp-items="Model.ActivityLevelOptions" class="form-select">
+            <option value="">Выберите уровень</option>
+        </select>
         <span asp-validation-for="ActivityLevel" class="text-danger"></span>
     </div>
 
     <div class="col-md-3">
-        <label asp-for="DailyCalories" class="form-label"></label>
-        <input asp-for="DailyCalories" class="form-control" type="number" min="0" max="10000" step="0.01" />
-        <span asp-validation-for="DailyCalories" class="text-danger"></span>
+        <div class="form-label">Текущая расчётная норма калорий</div>
+        <div class="form-control-plaintext">@Model.DailyCalories.ToString("0") ккал</div>
+        <div class="form-text">Норма калорий рассчитывается автоматически после сохранения профиля.</div>
     </div>
 
     <div class="col-12">
