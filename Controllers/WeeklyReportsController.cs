@@ -29,8 +29,9 @@ namespace SmartMeal.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int weekOffset = 0)
         {
+            weekOffset = NormalizeWeekOffset(weekOffset);
             var userProfile = await _context.UserProfiles
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == DemoUserProfileId);
@@ -40,7 +41,7 @@ namespace SmartMeal.Controllers
                 return NotFound("Демо-профиль не найден.");
             }
 
-            var weekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
+            var weekNumber = GetWeekNumberByOffset(weekOffset);
             var mealPlans = await _context.MealPlans
                 .AsNoTracking()
                 .Include(mp => mp.Dish)
@@ -58,6 +59,7 @@ namespace SmartMeal.Controllers
 
             var model = BuildReportViewModel(
                 userProfile,
+                weekOffset,
                 weekNumber,
                 mealPlans,
                 userAllergenIds.ToHashSet());
@@ -67,6 +69,7 @@ namespace SmartMeal.Controllers
 
         private static WeeklyReportViewModel BuildReportViewModel(
             UserProfile userProfile,
+            int weekOffset,
             int weekNumber,
             List<MealPlan> mealPlans,
             HashSet<int> userAllergenIds)
@@ -78,6 +81,7 @@ namespace SmartMeal.Controllers
 
             var model = new WeeklyReportViewModel
             {
+                WeekOffset = weekOffset,
                 WeekNumber = weekNumber,
                 DemoUserDisplayName = userProfile.FullName,
                 DailyCalorieTarget = userProfile.DailyCalories
@@ -114,6 +118,18 @@ namespace SmartMeal.Controllers
             model.WeeklyTotalCarbs = model.Days.Sum(day => day.Carbs);
 
             return model;
+        }
+
+        private static int NormalizeWeekOffset(int weekOffset)
+        {
+            return weekOffset <= 0 ? 0 : 1;
+        }
+
+        private static int GetWeekNumberByOffset(int weekOffset)
+        {
+            var selectedDate = DateTime.Today.AddDays(NormalizeWeekOffset(weekOffset) * 7);
+
+            return ISOWeek.GetWeekOfYear(selectedDate);
         }
 
         private static void AddAllergyWarnings(

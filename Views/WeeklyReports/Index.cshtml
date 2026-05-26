@@ -11,12 +11,27 @@
     <p class="text-muted mb-0">Неделя: @Model.WeekNumber</p>
 </div>
 
+<div class="btn-group mb-4" role="group" aria-label="Выбор недели">
+    <a asp-controller="WeeklyReports"
+       asp-action="Index"
+       asp-route-weekOffset="0"
+       class="btn @(Model.WeekOffset == 0 ? "btn-primary" : "btn-outline-primary")">
+        Текущая неделя
+    </a>
+    <a asp-controller="WeeklyReports"
+       asp-action="Index"
+       asp-route-weekOffset="1"
+       class="btn @(Model.WeekOffset == 1 ? "btn-primary" : "btn-outline-primary")">
+        Следующая неделя
+    </a>
+</div>
+
 <div class="row g-3 mb-4">
     <div class="col-md-3">
         <div class="border rounded p-3 h-100">
             <div class="text-muted small">Неделя</div>
             <div class="fs-3 fw-semibold">@Model.WeekNumber</div>
-            <div class="text-muted small">текущая ISO-неделя</div>
+            <div class="text-muted small">выбранная ISO-неделя</div>
         </div>
     </div>
     <div class="col-md-3">

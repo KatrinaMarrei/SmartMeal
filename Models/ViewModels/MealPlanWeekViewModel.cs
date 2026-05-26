@@ -2,6 +2,8 @@ namespace SmartMeal.Models.ViewModels
 {
     public class MealPlanWeekViewModel
     {
+        public int WeekOffset { get; set; }
+
         public int WeekNumber { get; set; }
 
         public string UserFullName { get; set; } = string.Empty;
