@@ -19,6 +19,7 @@ namespace SmartMeal.Data
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<UserAllergen> UserAllergens { get; set; }
         public DbSet<MealPlan> MealPlans { get; set; }
+        public DbSet<FavoriteDish> FavoriteDishes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -90,6 +91,19 @@ namespace SmartMeal.Data
                 .HasOne(ua => ua.Allergen)
                 .WithMany(a => a.UserAllergens)
                 .HasForeignKey(ua => ua.AllergenId);
+
+            modelBuilder.Entity<FavoriteDish>()
+                .HasKey(fd => new { fd.UserProfileId, fd.DishId });
+
+            modelBuilder.Entity<FavoriteDish>()
+                .HasOne(fd => fd.UserProfile)
+                .WithMany(u => u.FavoriteDishes)
+                .HasForeignKey(fd => fd.UserProfileId);
+
+            modelBuilder.Entity<FavoriteDish>()
+                .HasOne(fd => fd.Dish)
+                .WithMany(d => d.FavoriteDishes)
+                .HasForeignKey(fd => fd.DishId);
 
             modelBuilder.Entity<Dish>()
                 .HasOne(d => d.CreatedByUserProfile)

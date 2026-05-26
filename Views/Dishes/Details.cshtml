@@ -79,5 +79,14 @@ else
         </div>
     </div>
 
-    <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary mt-4">Вернуться в каталог</a>
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-secondary">Вернуться в каталог</a>
+        <form asp-controller="Favorites" asp-action="@(Model.IsFavorite ? "Remove" : "Add")" method="post">
+            <input type="hidden" name="dishId" value="@Model.Id" />
+            <input type="hidden" name="returnUrl" value="@Url.Action("Details", "Dishes", new { id = Model.Id })" />
+            <button type="submit" class="btn @(Model.IsFavorite ? "btn-outline-danger" : "btn-outline-success")">
+                @(Model.IsFavorite ? "Убрать из избранного" : "В избранное")
+            </button>
+        </form>
+    </div>
 }

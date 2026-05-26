@@ -1,0 +1,76 @@
+@model List<DishCatalogItemViewModel>
+
+@{
+    ViewData["Title"] = "Избранное";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h1 class="mb-0">Избранное</h1>
+    <a asp-controller="Dishes" asp-action="Index" class="btn btn-outline-primary">Перейти в каталог</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        У вас пока нет избранных блюд.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Ккал</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                    <th>Время</th>
+                    <th>Ингредиент</th>
+                    <th>Типы питания</th>
+                    <th>Аллергены</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dish in Model)
+                {
+                    <tr>
+                        <td>
+                            <div>@dish.Name</div>
+                            @if (dish.HasAllergyWarning)
+                            {
+                                <div class="alert alert-warning py-1 px-2 mt-2 mb-0 small">
+                                    Содержит ваши аллергены: @string.Join(", ", dish.MatchingUserAllergenNames)
+                                </div>
+                            }
+                        </td>
+                        <td>@dish.CategoryName</td>
+                        <td>@dish.Calories.ToString("0")</td>
+                        <td>@dish.Proteins.ToString("0")</td>
+                        <td>@dish.Fats.ToString("0")</td>
+                        <td>@dish.Carbs.ToString("0")</td>
+                        <td>@dish.CookingTime мин.</td>
+                        <td>@(dish.MainIngredient ?? "Не указан")</td>
+                        <td>@(dish.DietTypeNames.Any() ? string.Join(", ", dish.DietTypeNames) : "Не указано")</td>
+                        <td>@(dish.AllergenNames.Any() ? string.Join(", ", dish.AllergenNames) : "Не указано")</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a asp-controller="Dishes" asp-action="Details" asp-route-id="@dish.Id" class="btn btn-sm btn-outline-primary">
+                                    Подробнее
+                                </a>
+                                <form asp-controller="Favorites" asp-action="Remove" method="post">
+                                    <input type="hidden" name="dishId" value="@dish.Id" />
+                                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Убрать из избранного</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

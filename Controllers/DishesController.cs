@@ -79,6 +79,7 @@ namespace SmartMeal.Controllers
                 .ToListAsync();
 
             var userAllergenIds = await LoadDemoUserAllergenIdsAsync();
+            var favoriteDishIds = await LoadDemoUserFavoriteDishIdsAsync();
 
             var dishes = dishEntities
                 .Select(d => new DishCatalogItemViewModel
@@ -104,7 +105,8 @@ namespace SmartMeal.Controllers
                         .OrderBy(name => name)
                         .ToList(),
                     MatchingUserAllergenNames = GetMatchingUserAllergenNames(d, userAllergenIds)
-                        .ToList()
+                        .ToList(),
+                    IsFavorite = favoriteDishIds.Contains(d.Id)
                 })
                 .ToList();
 
@@ -256,6 +258,7 @@ namespace SmartMeal.Controllers
             }
 
             var userAllergenIds = await LoadDemoUserAllergenIdsAsync();
+            var favoriteDishIds = await LoadDemoUserFavoriteDishIdsAsync();
 
             var model = new DishDetailsViewModel
             {
@@ -284,7 +287,8 @@ namespace SmartMeal.Controllers
                     .OrderBy(name => name)
                     .ToList(),
                 MatchingUserAllergenNames = GetMatchingUserAllergenNames(dish, userAllergenIds)
-                    .ToList()
+                    .ToList(),
+                IsFavorite = favoriteDishIds.Contains(dish.Id)
             };
 
             return View(model);
@@ -300,6 +304,18 @@ namespace SmartMeal.Controllers
                 .ToListAsync();
 
             return allergenIds.ToHashSet();
+        }
+
+        private async Task<HashSet<int>> LoadDemoUserFavoriteDishIdsAsync()
+        {
+            var dishIds = await _context.FavoriteDishes
+                .AsNoTracking()
+                .Where(fd => fd.UserProfileId == DemoUserProfileId)
+                .Select(fd => fd.DishId)
+                .Distinct()
+                .ToListAsync();
+
+            return dishIds.ToHashSet();
         }
 
         private static List<string> GetMatchingUserAllergenNames(Dish dish, HashSet<int> userAllergenIds)

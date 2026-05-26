@@ -36,6 +36,8 @@ namespace SmartMeal.Models.ViewModels
 
         public List<string> MatchingUserAllergenNames { get; set; } = new();
 
+        public bool IsFavorite { get; set; }
+
         public bool HasAllergyWarning => MatchingUserAllergenNames.Any();
     }
 }

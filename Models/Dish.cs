@@ -54,5 +54,7 @@ namespace SmartMeal.Models
         public ICollection<DishAllergen> DishAllergens { get; set; } = new List<DishAllergen>();
 
         public ICollection<DishDietType> DishDietTypes { get; set; } = new List<DishDietType>();
+
+        public ICollection<FavoriteDish> FavoriteDishes { get; set; } = new List<FavoriteDish>();
     }
 }
