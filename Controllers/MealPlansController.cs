@@ -30,6 +30,14 @@ namespace SmartMeal.Controllers
             "Перекус"
         };
 
+        private static readonly IReadOnlyDictionary<string, int> MealTypeCategoryIds = new Dictionary<string, int>
+        {
+            [MealTypes[0]] = 1,
+            [MealTypes[1]] = 2,
+            [MealTypes[2]] = 3,
+            [MealTypes[3]] = 4
+        };
+
         private readonly ApplicationDbContext _context;
 
         public MealPlansController(ApplicationDbContext context)
@@ -226,15 +234,14 @@ namespace SmartMeal.Controllers
         {
             var dishes = await _context.Dishes
                 .AsNoTracking()
-                .Include(d => d.Category)
-                .OrderBy(d => d.Category!.SortOrder)
+                .OrderBy(d => d.CategoryId)
                 .ThenBy(d => d.Name)
                 .ToListAsync();
 
             return MealTypes.ToDictionary(
                 mealType => mealType,
                 mealType => dishes
-                    .Where(d => d.Category != null && d.Category.Name == mealType)
+                    .Where(d => d.CategoryId == MealTypeCategoryIds[mealType])
                     .Select(d => new MealPlanDishOptionViewModel
                     {
                         Id = d.Id,
