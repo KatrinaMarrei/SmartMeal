@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
+  <title id="title">Обед</title>
+  <desc id="desc">Простое изображение обеда</desc>
+  <rect width="640" height="400" rx="32" fill="#e9f7ef"/>
+  <path d="M0 296c78-40 153-38 229-8 84 33 167 34 257 0 63-24 112-17 154 10v102H0z" fill="#b8dfc2"/>
+  <ellipse cx="318" cy="224" rx="204" ry="100" fill="#f8fafc"/>
+  <ellipse cx="318" cy="224" rx="150" ry="70" fill="#f97316"/>
+  <circle cx="250" cy="214" r="30" fill="#ef4444"/>
+  <circle cx="326" cy="252" r="28" fill="#facc15"/>
+  <circle cx="396" cy="210" r="34" fill="#22c55e"/>
+  <path d="M190 144c56-44 132-44 188 0" fill="none" stroke="#166534" stroke-width="22" stroke-linecap="round"/>
+  <path d="M450 106v170" stroke="#475569" stroke-width="16" stroke-linecap="round"/>
+  <path d="M484 106v170" stroke="#475569" stroke-width="16" stroke-linecap="round"/>
+</svg>

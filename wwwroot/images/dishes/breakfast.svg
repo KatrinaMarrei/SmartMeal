@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
+  <title id="title">Завтрак</title>
+  <desc id="desc">Простое изображение завтрака</desc>
+  <rect width="640" height="400" rx="32" fill="#fff4d6"/>
+  <circle cx="112" cy="78" r="54" fill="#ffc857"/>
+  <path d="M0 286c78-34 153-25 226 4 82 33 164 39 248 6 67-26 121-23 166 7v97H0z" fill="#f4c06a"/>
+  <ellipse cx="328" cy="226" rx="204" ry="104" fill="#f8fafc"/>
+  <ellipse cx="328" cy="226" rx="154" ry="74" fill="#e7c88a"/>
+  <circle cx="262" cy="212" r="28" fill="#d97706"/>
+  <circle cx="330" cy="252" r="24" fill="#92400e"/>
+  <circle cx="398" cy="210" r="28" fill="#b45309"/>
+  <path d="M178 142h300" stroke="#9a6b32" stroke-width="26" stroke-linecap="round"/>
+  <path d="M218 106h220" stroke="#b9823a" stroke-width="22" stroke-linecap="round"/>
+</svg>

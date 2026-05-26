@@ -21,6 +21,7 @@ else
         <table class="table table-striped align-middle">
             <thead>
                 <tr>
+                    <th>Фото</th>
                     <th>Название</th>
                     <th>Категория</th>
                     <th>Ккал</th>
@@ -38,6 +39,9 @@ else
                 @foreach (var recipe in Model)
                 {
                     <tr>
+                        <td>
+                            <img src="@recipe.ImageUrl" alt="Изображение блюда @recipe.Name" class="dish-thumbnail" />
+                        </td>
                         <td>
                             <div>@recipe.Name</div>
                             @if (recipe.HasAllergyWarning)

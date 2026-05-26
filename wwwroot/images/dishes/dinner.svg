@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
+  <title id="title">Ужин</title>
+  <desc id="desc">Простое изображение ужина</desc>
+  <rect width="640" height="400" rx="32" fill="#eef2ff"/>
+  <circle cx="518" cy="72" r="48" fill="#f8fafc"/>
+  <path d="M0 300c70-28 138-23 207 8 93 42 186 34 270-4 61-27 115-25 163 7v89H0z" fill="#c7d2fe"/>
+  <ellipse cx="316" cy="236" rx="208" ry="96" fill="#f8fafc"/>
+  <path d="M182 236c55-58 158-88 276-34 22 10 38 24 38 34s-16 25-38 34c-118 54-221 24-276-34z" fill="#60a5fa"/>
+  <circle cx="412" cy="224" r="10" fill="#1e3a8a"/>
+  <path d="M198 236l-56-42v84z" fill="#3b82f6"/>
+  <path d="M288 190c27 16 50 40 68 70" stroke="#bfdbfe" stroke-width="18" stroke-linecap="round"/>
+  <path d="M178 132h280" stroke="#64748b" stroke-width="20" stroke-linecap="round"/>
+</svg>

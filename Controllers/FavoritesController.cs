@@ -43,6 +43,7 @@ namespace SmartMeal.Controllers
                     Id = d.Id,
                     Name = d.Name,
                     CategoryName = d.Category != null ? d.Category.Name : "Без категории",
+                    ImageUrl = DishImagePaths.WithFallback(d.ImageUrl),
                     Calories = d.Calories,
                     Proteins = d.Proteins,
                     Fats = d.Fats,

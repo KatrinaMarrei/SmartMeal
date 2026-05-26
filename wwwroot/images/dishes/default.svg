@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
+  <title id="title">Рецепт</title>
+  <desc id="desc">Изображение рецепта по умолчанию</desc>
+  <rect width="640" height="400" rx="32" fill="#f1f5f9"/>
+  <path d="M0 296c74-31 143-29 216 0 92 36 176 35 257 1 62-26 116-22 167 11v92H0z" fill="#cbd5e1"/>
+  <rect x="178" y="88" width="284" height="234" rx="32" fill="#ffffff"/>
+  <path d="M228 152h184M228 202h184M228 252h126" stroke="#64748b" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="462" cy="102" r="56" fill="#38bdf8"/>
+  <path d="M438 104l20 20 40-50" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,3 +1,5 @@
+using SmartMeal.Models;
+
 namespace SmartMeal.Models.ViewModels
 {
     public class DishCatalogItemViewModel
@@ -7,6 +9,8 @@ namespace SmartMeal.Models.ViewModels
         public string Name { get; set; } = string.Empty;
 
         public string CategoryName { get; set; } = string.Empty;
+
+        public string ImageUrl { get; set; } = DishImagePaths.Default;
 
         public decimal Calories { get; set; }
 

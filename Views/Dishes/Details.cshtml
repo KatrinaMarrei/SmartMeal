@@ -17,6 +17,10 @@ else
         <p class="lead">@Model.Description</p>
     </div>
 
+    <div class="mb-4">
+        <img src="@Model.ImageUrl" alt="Изображение блюда @Model.Name" class="dish-detail-image" />
+    </div>
+
     @if (Model.HasAllergyWarning)
     {
         <div class="alert alert-warning">
