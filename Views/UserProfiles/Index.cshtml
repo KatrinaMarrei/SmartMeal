@@ -4,13 +4,14 @@
     ViewData["Title"] = "Профиль";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 sm-page-header">
     <h1 class="mb-0">Профиль</h1>
     <a asp-controller="UserProfiles" asp-action="Edit" class="btn btn-primary">Редактировать профиль</a>
 </div>
 
 <div class="row g-4">
     <div class="col-lg-7">
+        <div class="sm-panel h-100">
         <h2 class="h4">Основная информация</h2>
         <dl class="row">
             <dt class="col-sm-5">ФИО</dt>
@@ -31,9 +32,11 @@
             <dt class="col-sm-5">Рост</dt>
             <dd class="col-sm-7">@Model.Height.ToString("0.##") см</dd>
         </dl>
+        </div>
     </div>
 
     <div class="col-lg-5">
+        <div class="sm-panel h-100">
         <h2 class="h4">Цели и ограничения</h2>
         <dl class="row">
             <dt class="col-sm-6">Цель</dt>
@@ -48,5 +51,6 @@
             <dt class="col-sm-6">Аллергены</dt>
             <dd class="col-sm-6">@(Model.Allergens.Any() ? string.Join(", ", Model.Allergens.Select(a => a.Name)) : "Не указаны")</dd>
         </dl>
+        </div>
     </div>
 </div>

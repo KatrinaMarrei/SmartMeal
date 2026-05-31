@@ -5,7 +5,7 @@
     ViewData["Title"] = "Недельный отчёт";
 }
 
-<div class="mb-4">
+<div class="sm-page-header">
     <h1>Недельный отчёт</h1>
     <p class="text-muted mb-1">Демо-пользователь: @Model.DemoUserDisplayName</p>
     <p class="text-muted mb-0">Неделя: @Model.WeekNumber</p>
@@ -28,28 +28,28 @@
 
 <div class="row g-3 mb-4">
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Неделя</div>
             <div class="fs-3 fw-semibold">@Model.WeekNumber</div>
             <div class="text-muted small">выбранная ISO-неделя</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Цель на день</div>
             <div class="fs-3 fw-semibold">@Model.DailyCalorieTarget.ToString("0")</div>
             <div class="text-muted small">ккал</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Калории за неделю</div>
             <div class="fs-3 fw-semibold">@Model.WeeklyTotalCalories.ToString("0")</div>
             <div class="text-muted small">ккал</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Среднее за день</div>
             <div class="fs-3 fw-semibold">@Model.AverageCaloriesPerDay.ToString("0")</div>
             <div class="text-muted small">ккал</div>
@@ -59,7 +59,7 @@
 
 <div class="row g-3 mb-4">
     <div class="col-md-6">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-panel h-100">
             <h2 class="h5 mb-3">БЖУ за неделю</h2>
             <div class="row text-center">
                 <div class="col-4">
@@ -78,7 +78,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-panel h-100">
             <h2 class="h5 mb-3">Дни по статусам</h2>
             <div class="row text-center">
                 <div class="col-4">
@@ -102,7 +102,7 @@
     <h2 class="h4 mb-3">Визуализация</h2>
     <div class="row g-3">
         <div class="col-lg-8">
-            <div class="border rounded p-3 h-100">
+            <div class="sm-panel h-100">
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <h3 class="h5 mb-0">Калории по дням</h3>
                     <div class="text-muted small">Цель: @Model.DailyCalorieTarget.ToString("0") ккал</div>
@@ -132,7 +132,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="border rounded p-3 h-100">
+            <div class="sm-panel h-100">
                 <h3 class="h5 mb-3">БЖУ за неделю</h3>
                 @if (Model.HasWeeklyMacros)
                 {
@@ -188,8 +188,8 @@
 
 <div class="mb-4">
     <h2 class="h4 mb-3">Отчёт по дням</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle">
+    <div class="table-responsive sm-table-wrap">
+        <table class="table table-bordered align-middle sm-table">
             <thead class="table-light">
                 <tr>
                     <th scope="col">День</th>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Главная";
 }
 
-<div class="mb-4">
+<div class="sm-page-header">
     <p class="text-muted mb-1">@Model.CurrentDayName, неделя @Model.CurrentWeekNumber</p>
     <h1 class="mb-2">Здравствуйте, @Model.DemoUserDisplayName!</h1>
     <p class="text-muted mb-0">Сегодняшний план питания и краткая сводка по калориям.</p>
@@ -12,21 +12,21 @@
 
 <div class="row g-3 mb-4">
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Цель на день</div>
             <div class="fs-3 fw-semibold">@Model.DailyCalorieTarget.ToString("0")</div>
             <div class="text-muted small">ккал</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Запланировано</div>
             <div class="fs-3 fw-semibold">@Model.TodayActualCalories.ToString("0")</div>
             <div class="text-muted small">ккал</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Статус</div>
             <div class="fs-4 fw-semibold">
                 <span class="@GetStatusClass(Model.CalorieStatusText)">@Model.CalorieStatusText</span>
@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="border rounded p-3 h-100">
+        <div class="sm-stat-card">
             <div class="text-muted small">Приемы пищи</div>
             <div class="fs-3 fw-semibold">@Model.PlannedMealsCount / @Model.PlannedMeals.Count</div>
             <div class="text-muted small">выбрано на сегодня</div>
@@ -50,8 +50,8 @@
             <a asp-controller="MealPlans" asp-action="Index" class="btn btn-outline-primary btn-sm">Открыть план питания</a>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+        <div class="table-responsive sm-table-wrap">
+            <table class="table table-bordered align-middle sm-table">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Прием пищи</th>
@@ -90,6 +90,7 @@
     </div>
 
     <div class="col-lg-4">
+        <div class="sm-panel h-100">
         <h2 class="h4 mb-3">Быстрые действия</h2>
         <div class="d-grid gap-2 mb-4">
             <a asp-controller="MealPlans" asp-action="Index" class="btn btn-primary">План питания</a>
@@ -121,6 +122,7 @@
                 В выбранных на сегодня блюдах ваши аллергены не найдены.
             </div>
         }
+        </div>
     </div>
 </div>
 

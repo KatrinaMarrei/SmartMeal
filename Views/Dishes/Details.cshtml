@@ -12,12 +12,12 @@
 }
 else
 {
-    <div class="mb-4">
+    <div class="sm-page-header">
         <h1>@Model.Name</h1>
         <p class="lead">@Model.Description</p>
     </div>
 
-    <div class="mb-4">
+    <div class="sm-panel mb-4">
         <img src="@Model.ImageUrl" alt="Изображение блюда @Model.Name" class="dish-detail-image" />
     </div>
 
@@ -30,6 +30,7 @@ else
 
     <div class="row g-4">
         <div class="col-lg-7">
+            <div class="sm-panel h-100">
             <h2 class="h4">Состав</h2>
             <p>@Model.IngredientsList</p>
 
@@ -56,11 +57,13 @@ else
                 <dt class="col-sm-5">Аллергены</dt>
                 <dd class="col-sm-7">@(Model.AllergenNames.Any() ? string.Join(", ", Model.AllergenNames) : "Не указано")</dd>
             </dl>
+            </div>
         </div>
 
         <div class="col-lg-5">
+            <div class="sm-panel h-100">
             <h2 class="h4">Пищевая ценность</h2>
-            <table class="table">
+            <table class="table sm-table">
                 <tbody>
                     <tr>
                         <th scope="row">Калории</th>
@@ -80,6 +83,7 @@ else
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 

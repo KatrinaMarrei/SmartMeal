@@ -4,12 +4,12 @@
     ViewData["Title"] = "Каталог блюд";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 sm-page-header">
     <h1 class="mb-0">Каталог блюд</h1>
     <a asp-controller="Dishes" asp-action="Create" class="btn btn-primary">Добавить рецепт</a>
 </div>
 
-<form asp-controller="Dishes" asp-action="Index" method="get" class="row g-3 mb-4">
+<form asp-controller="Dishes" asp-action="Index" method="get" class="row g-3 mb-4 sm-panel">
     <div class="col-md-4">
         <label for="searchQuery" class="form-label">Поиск</label>
         <input id="searchQuery" name="searchQuery" type="search" class="form-control" value="@Model.SearchQuery" placeholder="Название, ингредиент или состав" />
@@ -95,8 +95,8 @@
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-striped align-middle">
+    <div class="table-responsive sm-table-wrap">
+        <table class="table table-striped align-middle sm-table">
             <thead>
                 <tr>
                     <th>Фото</th>

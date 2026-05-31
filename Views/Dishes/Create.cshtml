@@ -4,9 +4,11 @@
     ViewData["Title"] = "Добавить рецепт";
 }
 
-<h1 class="mb-4">Добавить рецепт</h1>
+<div class="sm-page-header">
+    <h1 class="mb-0">Добавить рецепт</h1>
+</div>
 
-<form asp-controller="Dishes" asp-action="Create" method="post" class="row g-3">
+<form asp-controller="Dishes" asp-action="Create" method="post" class="row g-3 sm-panel">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

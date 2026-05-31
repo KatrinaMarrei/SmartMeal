@@ -4,7 +4,7 @@
     ViewData["Title"] = "План питания";
 }
 
-<div class="mb-4">
+<div class="sm-page-header">
     <h1>План питания</h1>
     <p class="text-muted mb-1">Демо-пользователь: @Model.UserFullName</p>
     <p class="text-muted mb-0">Неделя: @Model.WeekNumber. Цель на день: @Model.DailyCaloriesTarget.ToString("0") ккал.</p>
@@ -25,13 +25,13 @@
     </a>
 </div>
 
-<form asp-controller="MealPlans" asp-action="Save" method="post">
+<form asp-controller="MealPlans" asp-action="Save" method="post" class="sm-panel">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="WeekOffset" />
     <input type="hidden" asp-for="WeekNumber" />
 
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle">
+    <div class="table-responsive sm-table-wrap">
+        <table class="table table-bordered align-middle sm-table">
             <thead class="table-light">
                 <tr>
                     <th scope="col">День</th>
@@ -100,7 +100,7 @@
         </table>
     </div>
 
-    <button type="submit" class="btn btn-primary">Сохранить план</button>
+    <button type="submit" class="btn btn-primary mt-3">Сохранить план</button>
 </form>
 
 @functions {

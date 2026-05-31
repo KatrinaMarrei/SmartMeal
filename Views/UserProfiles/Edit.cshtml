@@ -4,9 +4,11 @@
     ViewData["Title"] = "Редактировать профиль";
 }
 
-<h1 class="mb-4">Редактировать профиль</h1>
+<div class="sm-page-header">
+    <h1 class="mb-0">Редактировать профиль</h1>
+</div>
 
-<form asp-controller="UserProfiles" asp-action="Edit" method="post" class="row g-3">
+<form asp-controller="UserProfiles" asp-action="Edit" method="post" class="row g-3 sm-panel">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
