@@ -269,6 +269,7 @@ a:hover {
   width: 100%;
   max-width: 32rem;
   max-height: 24rem;
+  margin-inline: auto;
   object-fit: cover;
   background-color: #f8f9fa;
   border: 1px solid var(--sm-border-soft);
