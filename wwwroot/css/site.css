@@ -162,6 +162,37 @@ a:hover {
   align-items: center;
 }
 
+.sm-about-feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.25rem 0;
+}
+
+.sm-about-feature-list span {
+  color: var(--sm-primary-dark);
+  background: var(--sm-primary-soft);
+  border: 1px solid #cfe5d3;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.sm-about-details dt {
+  color: var(--sm-text);
+  font-weight: 700;
+}
+
+.sm-about-details dd {
+  color: var(--sm-text-muted);
+  margin-bottom: 1rem;
+}
+
+.sm-about-details dd:last-child {
+  margin-bottom: 0;
+}
+
 .sm-table-wrap {
   overflow-x: auto;
   background: var(--sm-panel-bg);

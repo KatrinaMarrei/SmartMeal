@@ -1,6 +1,60 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+@{
+    ViewData["Title"] = "О проекте";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="sm-page-header">
+    <p class="text-muted mb-1">Учебный проект ASP.NET Core MVC</p>
+    <h1 class="mb-2">@ViewData["Title"]</h1>
+    <p class="text-muted mb-0">
+        SmartMeal - локальный веб-сервис для планирования питания на неделю.
+    </p>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <section class="sm-panel h-100">
+            <h2 class="sm-section-title">Что умеет SmartMeal</h2>
+            <p>
+                Проект помогает собрать рацион из готового каталога блюд и собственных рецептов,
+                сохранить понравившиеся блюда в избранное и составить план питания на текущую
+                или следующую неделю.
+            </p>
+            <div class="sm-about-feature-list" aria-label="Основные модули проекта">
+                <span>Каталог блюд</span>
+                <span>Пользовательские рецепты</span>
+                <span>Избранное</span>
+                <span>План питания</span>
+                <span>Профиль и норма калорий</span>
+                <span>Отчёты по КБЖУ</span>
+                <span>Предупреждения об аллергенах</span>
+            </div>
+            <p class="mb-0">
+                В профиле рассчитывается дневная норма калорий, а отчёты показывают калории
+                и диаграммы БЖУ средствами Razor/CSS без JavaScript-логики.
+                При выборе блюд система отмечает совпадения с аллергенами пользователя.
+            </p>
+        </section>
+    </div>
+
+    <div class="col-lg-4">
+        <aside class="sm-panel h-100">
+            <h2 class="sm-section-title">Техническая часть</h2>
+            <dl class="sm-about-details mb-0">
+                <dt>Хранение данных</dt>
+                <dd>Приложение работает локально с SQL Server LocalDB.</dd>
+
+                <dt>Изображения</dt>
+                <dd>Файлы рецептов хранятся в локальной папке проекта.</dd>
+
+                <dt>Демо-рецепты</dt>
+                <dd>Посевные блюда используют сгенерированные изображения еды.</dd>
+
+                <dt>MVP-ограничение</dt>
+                <dd>
+                    Рецепты, созданные пользователем, сейчас получают стандартное изображение-заглушку.
+                    Загрузка собственных изображений намеренно не реализована в MVP.
+                </dd>
+            </dl>
+        </aside>
+    </div>
+</div>
