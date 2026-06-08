@@ -203,10 +203,11 @@ a:hover {
 
 .sm-table {
   margin-bottom: 0;
+  font-size: 0.95rem;
 }
 
 .sm-table > :not(caption) > * > * {
-  padding: 0.9rem 1rem;
+  padding: 0.75rem 0.8rem;
   border-color: var(--sm-border-soft);
 }
 
@@ -214,6 +215,59 @@ a:hover {
   color: var(--sm-text);
   background: #f4f8ef;
   border-bottom-color: var(--sm-border);
+}
+
+.sm-table .dish-thumbnail {
+  width: 6.25rem;
+  height: 4.25rem;
+}
+
+.sm-dish-title-row {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  min-width: 10rem;
+}
+
+.sm-dish-link {
+  color: var(--sm-primary-dark);
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration-color: rgb(47 125 70 / 45%);
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.2rem;
+}
+
+.sm-dish-link:hover,
+.sm-dish-link:focus {
+  color: var(--sm-primary);
+  text-decoration-color: var(--sm-primary);
+}
+
+.sm-favorite-form {
+  flex: 0 0 auto;
+}
+
+.sm-favorite-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: var(--sm-primary);
+  background-color: #fffaf1;
+  border: 1px solid var(--sm-border);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.sm-favorite-button:hover,
+.sm-favorite-button:focus,
+.sm-favorite-button--active {
+  color: #fff;
+  background-color: var(--sm-primary);
+  border-color: var(--sm-primary);
 }
 
 .btn {

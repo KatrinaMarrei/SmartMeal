@@ -111,7 +111,6 @@ else
                     <th>Для детей</th>
                     <th>Типы питания</th>
                     <th>Аллергены</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -122,7 +121,18 @@ else
                             <img src="@dish.ImageUrl" alt="Изображение блюда @dish.Name" class="dish-thumbnail" />
                         </td>
                         <td>
-                            <div>@dish.Name</div>
+                            <div class="sm-dish-title-row">
+                                <a asp-controller="Dishes" asp-action="Details" asp-route-id="@dish.Id" class="sm-dish-link">
+                                    @dish.Name
+                                </a>
+                                <form asp-controller="Favorites" asp-action="@(dish.IsFavorite ? "Remove" : "Add")" method="post" class="sm-favorite-form">
+                                    <input type="hidden" name="dishId" value="@dish.Id" />
+                                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                    <button type="submit" class="btn btn-sm sm-favorite-button @(dish.IsFavorite ? "sm-favorite-button--active" : "")" title="@(dish.IsFavorite ? "Убрать из избранного" : "В избранное")" aria-label="@(dish.IsFavorite ? "Убрать из избранного" : "В избранное")">
+                                        <span aria-hidden="true">@(dish.IsFavorite ? "★" : "☆")</span>
+                                    </button>
+                                </form>
+                            </div>
                             @if (dish.HasAllergyWarning)
                             {
                                 <div class="alert alert-warning py-1 px-2 mt-2 mb-0 small">
@@ -140,20 +150,6 @@ else
                         <td>@(dish.IsForChildren ? "Да" : "Нет")</td>
                         <td>@(dish.DietTypeNames.Any() ? string.Join(", ", dish.DietTypeNames) : "Не указано")</td>
                         <td>@(dish.AllergenNames.Any() ? string.Join(", ", dish.AllergenNames) : "Не указано")</td>
-                        <td>
-                            <div class="d-flex flex-wrap gap-2">
-                                <a asp-controller="Dishes" asp-action="Details" asp-route-id="@dish.Id" class="btn btn-sm btn-outline-primary">
-                                    Подробнее
-                                </a>
-                                <form asp-controller="Favorites" asp-action="@(dish.IsFavorite ? "Remove" : "Add")" method="post">
-                                    <input type="hidden" name="dishId" value="@dish.Id" />
-                                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
-                                    <button type="submit" class="btn btn-sm @(dish.IsFavorite ? "btn-outline-danger" : "btn-outline-success")">
-                                        @(dish.IsFavorite ? "Убрать из избранного" : "В избранное")
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
                     </tr>
                 }
             </tbody>
