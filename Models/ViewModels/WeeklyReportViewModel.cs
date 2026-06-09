@@ -2,9 +2,11 @@ namespace SmartMeal.Models.ViewModels
 {
     public class WeeklyReportViewModel
     {
-        public int WeekOffset { get; set; }
-
         public int WeekNumber { get; set; }
+
+        public int SelectedWeekNumber { get; set; }
+
+        public List<int> AvailableWeekNumbers { get; set; } = new();
 
         public string DemoUserDisplayName { get; set; } = string.Empty;
 

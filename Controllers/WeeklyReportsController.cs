@@ -29,9 +29,9 @@ namespace SmartMeal.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int weekOffset = 0)
+        public async Task<IActionResult> Index(int? weekNumber)
         {
-            weekOffset = NormalizeWeekOffset(weekOffset);
+            var selectedWeekNumber = NormalizeWeekNumber(weekNumber);
             var userProfile = await _context.UserProfiles
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == DemoUserProfileId);
@@ -41,13 +41,12 @@ namespace SmartMeal.Controllers
                 return NotFound("Демо-профиль не найден.");
             }
 
-            var weekNumber = GetWeekNumberByOffset(weekOffset);
             var mealPlans = await _context.MealPlans
                 .AsNoTracking()
                 .Include(mp => mp.Dish)
                     .ThenInclude(d => d!.DishAllergens)
                         .ThenInclude(da => da.Allergen)
-                .Where(mp => mp.UserProfileId == DemoUserProfileId && mp.WeekNumber == weekNumber)
+                .Where(mp => mp.UserProfileId == DemoUserProfileId && mp.WeekNumber == selectedWeekNumber)
                 .ToListAsync();
 
             var userAllergenIds = await _context.UserAllergens
@@ -59,8 +58,7 @@ namespace SmartMeal.Controllers
 
             var model = BuildReportViewModel(
                 userProfile,
-                weekOffset,
-                weekNumber,
+                selectedWeekNumber,
                 mealPlans,
                 userAllergenIds.ToHashSet());
 
@@ -69,7 +67,6 @@ namespace SmartMeal.Controllers
 
         private static WeeklyReportViewModel BuildReportViewModel(
             UserProfile userProfile,
-            int weekOffset,
             int weekNumber,
             List<MealPlan> mealPlans,
             HashSet<int> userAllergenIds)
@@ -81,8 +78,9 @@ namespace SmartMeal.Controllers
 
             var model = new WeeklyReportViewModel
             {
-                WeekOffset = weekOffset,
                 WeekNumber = weekNumber,
+                SelectedWeekNumber = weekNumber,
+                AvailableWeekNumbers = Enumerable.Range(1, 53).ToList(),
                 DemoUserDisplayName = userProfile.FullName,
                 DailyCalorieTarget = userProfile.DailyCalories
             };
@@ -120,16 +118,14 @@ namespace SmartMeal.Controllers
             return model;
         }
 
-        private static int NormalizeWeekOffset(int weekOffset)
+        private static int NormalizeWeekNumber(int? weekNumber)
         {
-            return weekOffset <= 0 ? 0 : 1;
-        }
+            if (weekNumber == null)
+            {
+                return ISOWeek.GetWeekOfYear(DateTime.Today);
+            }
 
-        private static int GetWeekNumberByOffset(int weekOffset)
-        {
-            var selectedDate = DateTime.Today.AddDays(NormalizeWeekOffset(weekOffset) * 7);
-
-            return ISOWeek.GetWeekOfYear(selectedDate);
+            return Math.Clamp(weekNumber.Value, 1, 53);
         }
 
         private static void AddAllergyWarnings(
